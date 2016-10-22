@@ -48,7 +48,25 @@ typedef struct {
   int AXIS_Z;
 } AxesRaw_t;
 
+/**
+ * @brief  Axes raw structure definition
+ */
+typedef struct
+{
+  int16_t AXIS_X;
+  int16_t AXIS_Y;
+  int16_t AXIS_Z;
+} AxesRaw_TypeDef;
 
+/**
+ * @brief  Axes raw structure definition
+ */
+typedef struct
+{
+  int32_t AXIS_X;
+  int32_t AXIS_Y;
+  int32_t AXIS_Z;
+} Axes_TypeDef;
 
 #endif /* __GLOBALTYPEDEF_H */
 

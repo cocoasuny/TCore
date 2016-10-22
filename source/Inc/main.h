@@ -57,6 +57,7 @@
 #include "shell.h"
 #include "bsp_rtc_calendar.h"
 #include "Log.h"
+#include "bsp_imu_6axes.h"
 
 
 extern volatile AxesRaw_t g_Axes_data;

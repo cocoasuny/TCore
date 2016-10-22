@@ -40,7 +40,7 @@
 
 
 const char Dev_Msg[] =
-	"/*********************************  This is to be Done *******************************/\r\n"
+	"/******************************** The Project of TCore *******************************/\r\n"
     "/*                              This is a ble periphal device                        */\r\n"
     "/*                                                                                   */\r\n"
     "/*                              BSP Init Complate,Start...                           */\r\n"
@@ -94,6 +94,19 @@ static HUM_TEMP_StatusTypeDef HUM_TEMP_IO_Write(uint8_t* pBuffer, uint8_t Device
 static HUM_TEMP_StatusTypeDef HUM_TEMP_IO_Read(uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
         uint16_t NumByteToRead);
 
+/* Link function for 6 Axes IMU peripheral */
+IMU_6AXES_StatusTypeDef LSM6DS3_IO_Init( void );
+void LSM6DS3_IO_ITConfig( void );
+IMU_6AXES_StatusTypeDef LSM6DS3_IO_Write( uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToWrite );
+IMU_6AXES_StatusTypeDef LSM6DS3_IO_Read( uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToRead );
+static IMU_6AXES_StatusTypeDef IMU_6AXES_IO_Init( void );
+static IMU_6AXES_StatusTypeDef IMU_6AXES_IO_Write(uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToWrite);
+static IMU_6AXES_StatusTypeDef IMU_6AXES_IO_Read( uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToRead );
+
 /************************************I2C**********************************************/
 static void I2C_EXPBD_MspInit(void);
 static void I2C_EXPBD_Error(uint8_t Addr);
@@ -140,6 +153,13 @@ void Bsp_Init(void)
         printf("BSP Fatfs Init Err\r\n");
         BSP_init_Status = false;
     }
+	
+	/* init code for imu_6axes(ACC & GRY) sensor */
+	if(BSP_IMU_6AXES_Init() != IMU_6AXES_OK)
+	{
+		printf("BSP_IMU_6AXES_Init Err\r\n");
+		BSP_init_Status = false;
+	}
     
     #ifndef PRINTFLOG
         HAL_Delay(5000);
@@ -721,6 +741,122 @@ static PRESSURE_StatusTypeDef PRESSURE_IO_Read(uint8_t* pBuffer, uint8_t DeviceA
     return ret_val;
 }
 
+
+/********************************* LINK IMU 6 AXES *****************************/
+/**
+ * @brief  Configures LSM6DS3 I2C interface
+ * @retval IMU_6AXES_OK in case of success, an error code otherwise
+ */
+IMU_6AXES_StatusTypeDef LSM6DS3_IO_Init( void )
+{
+    return IMU_6AXES_IO_Init();
+}
+
+/**
+ * @brief  Configures LSM6DS3 interrupt lines for NUCLEO boards
+ * @retval None
+ */
+void LSM6DS3_IO_ITConfig( void )
+{
+//    GPIO_InitTypeDef GPIO_InitStructureInt1;
+//    /* Enable INT1 GPIO clock */
+//    MEMS_INT1_GPIO_CLK_ENABLE();
+
+//    /* Configure GPIO PINs to detect Interrupts */
+//    GPIO_InitStructureInt1.Pin = MEMS_INT1_PIN;
+//    GPIO_InitStructureInt1.Mode = GPIO_MODE_IT_RISING;
+//    GPIO_InitStructureInt1.Speed = GPIO_SPEED_FAST;
+
+
+//    GPIO_InitStructureInt1.Pull  = GPIO_NOPULL;
+//    HAL_GPIO_Init(MEMS_INT1_GPIO_PORT, &GPIO_InitStructureInt1);
+
+//    /* Enable and set EXTI Interrupt priority */
+//    HAL_NVIC_SetPriority(MEMS_INT1_EXTI_IRQn, 0x00, 0x00);
+//    HAL_NVIC_EnableIRQ(MEMS_INT1_EXTI_IRQn);
+
+}
+/**
+ * @brief  Writes a buffer to the LSM6DS3 sensor
+ * @param  pBuffer the pointer to data to be written
+ * @param  DeviceAddr the slave address to be programmed
+ * @param  RegisterAddr the IMU 6 axes internal address register to be written
+ * @param  NumByteToWrite the number of bytes to be written
+ * @retval IMU_6AXES_OK in case of success, an error code otherwise
+ */
+IMU_6AXES_StatusTypeDef LSM6DS3_IO_Write(  uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToWrite )
+{
+    return IMU_6AXES_IO_Write( pBuffer, DeviceAddr, RegisterAddr, NumByteToWrite );
+}
+/**
+ * @brief  Reads a buffer from the LSM6DS3 sensor
+ * @param  pBuffer the pointer to data to be read
+ * @param  DeviceAddr the slave address to be programmed
+ * @param  RegisterAddr the IMU 6 axes internal address register to be read
+ * @param  NumByteToRead the number of bytes to be read
+ * @retval IMU_6AXES_OK in case of success, an error code otherwise
+ */
+IMU_6AXES_StatusTypeDef LSM6DS3_IO_Read( uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToRead )
+{
+    return IMU_6AXES_IO_Read( pBuffer, DeviceAddr, RegisterAddr, NumByteToRead );
+}
+
+/**
+ * @brief  Configures Imu 6 axes I2C interface
+ * @retval IMU_6AXES_OK in case of success, an error code otherwise
+ */
+static IMU_6AXES_StatusTypeDef IMU_6AXES_IO_Init( void )
+{
+    if(I2C_EXPBD_Init() != HAL_OK)
+    {
+        return IMU_6AXES_ERROR;
+    }
+
+    return IMU_6AXES_OK;
+}
+/**
+ * @brief  Writes a buffer to the IMU 6 axes sensor
+ * @param  pBuffer the pointer to data to be written
+ * @param  DeviceAddr the slave address to be programmed
+ * @param  RegisterAddr the IMU 6 axes internal address register to be written
+ * @param  NumByteToWrite the number of bytes to be written
+ * @retval IMU_6AXES_OK in case of success, an error code otherwise
+ */
+static IMU_6AXES_StatusTypeDef IMU_6AXES_IO_Write(uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToWrite)
+{
+    IMU_6AXES_StatusTypeDef ret_val = IMU_6AXES_OK;
+
+    /* call I2C_EXPBD Read data bus function */
+    if(I2C_EXPBD_WriteData( pBuffer, DeviceAddr, RegisterAddr, NumByteToWrite ) != HAL_OK)
+    {
+        ret_val = IMU_6AXES_ERROR;
+    }
+    return ret_val;
+}
+/**
+ * @brief  Reads a buffer from the IMU 6 axes sensor
+ * @param  pBuffer the pointer to data to be read
+ * @param  DeviceAddr the slave address to be programmed
+ * @param  RegisterAddr the IMU 6 axes internal address register to be read
+ * @param  NumByteToRead the number of bytes to be read
+ * @retval IMU_6AXES_OK in case of success, an error code otherwise
+ */
+static IMU_6AXES_StatusTypeDef IMU_6AXES_IO_Read( uint8_t* pBuffer, uint8_t DeviceAddr, uint8_t RegisterAddr,
+        uint16_t NumByteToRead )
+{
+    IMU_6AXES_StatusTypeDef ret_val = IMU_6AXES_OK;
+
+    /* call I2C_EXPBD Read data bus function */
+    if(I2C_EXPBD_ReadData( pBuffer, DeviceAddr, RegisterAddr, NumByteToRead ) != HAL_OK)
+    {
+        ret_val = IMU_6AXES_ERROR;
+    }
+
+    return ret_val;
+}
 /******************************* I2C Routines**********************************/
 /**
  * @brief  Configures I2C interface

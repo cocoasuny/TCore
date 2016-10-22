@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>Cannon</TargetName>
+      <TargetName>TCore</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -47,7 +47,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>Cannon</OutputName>
+          <OutputName>TCore</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -365,7 +365,7 @@
               <MiscControls>--C99 --gnu</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F401xE,BLUENRG_MS,ENABLE_SPI_FIX</Define>
               <Undefine></Undefine>
-              <IncludePath>../source/Inc;../source/Drivers/STM32F4xx_HAL_Driver/Inc;../source/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../source/Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../source/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../source/Drivers/CMSIS/Include;../source/Drivers/CMSIS/Device/ST/STM32F4xx/Include;../source/Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../source/Middlewares/Third_Party/FreeRTOS/Source/include;../source/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../source/Middlewares/Third_Party/FatFs/src/drivers;../source/Middlewares/Third_Party/FatFs/src;../source/Middlewares/ST/STM32_BlueNRG/SimpleBlueNRG_HCI/includes;../source/Drivers/Components;../source/Src/shell</IncludePath>
+              <IncludePath>../source/Inc;../source/Drivers/STM32F4xx_HAL_Driver/Inc;../source/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../source/Middlewares/ST/STM32_USB_Device_Library/Core/Inc;../source/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc;../source/Drivers/CMSIS/Include;../source/Drivers/CMSIS/Device/ST/STM32F4xx/Include;../source/Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../source/Middlewares/Third_Party/FreeRTOS/Source/include;../source/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../source/Middlewares/Third_Party/FatFs/src/drivers;../source/Middlewares/Third_Party/FatFs/src;../source/Middlewares/ST/STM32_BlueNRG/SimpleBlueNRG_HCI/includes;../source/Drivers/Components;../source/Src/shell;../source/Src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -538,6 +538,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\Src\bsp_rtc_calendar.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_imu_6axes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\Src\bsp_imu_6axes.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -582,6 +587,11 @@
               <FileName>lps25hb.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\Drivers\Components\lps25hb.c</FilePath>
+            </File>
+            <File>
+              <FileName>lsm6ds3.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\Drivers\Components\lsm6ds3.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -126,19 +126,24 @@ int main(void)
 *******************************************************************************/
 void LedCtlTask(void *pvParameters)
 {
+	Axes_TypeDef Axes;
+	
     BSP_LED_Init();     //Led GPIO Init
-    
+	    
     while(1)
     {
 #ifdef SHELL_ENABLE			
 		Shell_ProcessorHandler();     //Shell处理函数
 #endif			
         BSP_LED_Toggle();
+		
+		memset(&Axes,0,sizeof(Axes));
+		BSP_IMU_6AXES_X_GetAxes(&Axes);
         
         /* for test */
-        g_Axes_data.AXIS_X += 100;
-        g_Axes_data.AXIS_Y += 100;
-        g_Axes_data.AXIS_Z += 100;
+        g_Axes_data.AXIS_X = Axes.AXIS_X;
+        g_Axes_data.AXIS_Y = Axes.AXIS_Y;
+        g_Axes_data.AXIS_Z = Axes.AXIS_Z;
         BlueNRG_Update_Acc((AxesRaw_t*)&g_Axes_data);
         vTaskDelay(g_LedFlashTime);     //控制LDE闪烁频率
     }

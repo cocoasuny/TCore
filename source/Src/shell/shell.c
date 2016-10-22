@@ -252,7 +252,7 @@ void Shell_Invalid_Service(void)
 		}
 		else if(StrComp(ptSrc,"who are you\r\n"))
 		{
-			printf("I'm a Periphral device\r\n");
+			printf("I'm TCore\r\n");
 		}
         else goto ERROR_LOOP;
     }

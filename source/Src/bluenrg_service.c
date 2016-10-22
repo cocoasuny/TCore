@@ -56,7 +56,7 @@
 
 
 /* Ble parameters define */
-const char *devicename = "BlueNRG";    //DeviceMaxName:10
+const char *devicename = "TCore";    //DeviceMaxName:10
 uint8_t g_tx_power_level = 6;
 uint16_t service_handle, dev_name_char_handle, appearance_char_handle;
 volatile uint16_t connection_handle = 0;
