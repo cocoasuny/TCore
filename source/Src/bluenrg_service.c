@@ -56,7 +56,7 @@
 
 
 /* Ble parameters define */
-const char *devicename = "TCore";    //DeviceMaxName:10
+const char *devicename = "BlueNRG";    //DeviceMaxName:10
 uint8_t g_tx_power_level = 6;
 uint16_t service_handle, dev_name_char_handle, appearance_char_handle;
 volatile uint16_t connection_handle = 0;
@@ -228,7 +228,7 @@ tBleStatus Ble_SetTx_Power(uint8_t level)
    */
 tBleStatus Ble_AdvAddress_Set(void)
 { 
-	uint8_t bdaddr[] = {0x12, 0x34, 0x00, 0xE1, 0x80, 0x02};
+	uint8_t bdaddr[] = {0x12, 0x34, 0x00, 0xE1, 0x80, 0x04};
 	tBleStatus ret = BLE_STATUS_ERROR;
 		
 	ret = aci_hal_write_config_data(CONFIG_DATA_PUBADDR_OFFSET,

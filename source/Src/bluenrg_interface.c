@@ -42,6 +42,7 @@
 #include "gp_timer.h"
 #include "hci.h"
 #include "platform.h"
+#include "main.h"
 
 
 #define HEADER_SIZE 5
@@ -61,7 +62,18 @@ SPI_HandleTypeDef SpiHandle;
  */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  HCI_Isr();
+	if(GPIO_Pin == BNRG_SPI_EXTI_PIN)
+	{
+		HCI_Isr();
+	}
+	if(GPIO_Pin == GPIO_PIN_KEY1)
+	{
+		Key1_EXTI_Handle();
+	}	
+	if(GPIO_Pin == GPIO_PIN_KEY2)
+	{
+		Key2_EXTI_Handle();
+	}
 }
 
 

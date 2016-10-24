@@ -194,7 +194,36 @@ void USART1_IRQHandler(void)
 
 void BNRG_SPI_EXTI_IRQHandler(void)
 {
-    HAL_GPIO_EXTI_IRQHandler(BNRG_SPI_EXTI_PIN);
+	if(__HAL_GPIO_EXTI_GET_IT(BNRG_SPI_EXTI_PIN) != RESET)
+	{
+		HAL_GPIO_EXTI_IRQHandler(BNRG_SPI_EXTI_PIN);
+	}
+}
+
+/**
+  * @brief  This function handles External line 10~15 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void EXTI15_10_IRQHandler(void)
+{
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_KEY2) != RESET)
+	{
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_KEY2);
+	}
+}
+
+/**
+  * @brief  This function handles External line 5~9 interrupt request.
+  * @param  None
+  * @retval None
+  */
+void EXTI9_5_IRQHandler(void)
+{
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_KEY2) != RESET)
+	{
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_KEY1);
+	}
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

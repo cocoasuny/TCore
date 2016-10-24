@@ -65,6 +65,10 @@
 #define Task_BlueNRGHCI_Priority     2      //task priority
 
 
+/* NVIC Priority define */
+#define PT_EXTI_KEY_PRE_PRIORITY			0x0A
+#define PT_EXTI_KEY_SUB_PRIORITY			0
+
 
 #ifdef PRINTFLOG
     #define Log  printf
@@ -80,7 +84,7 @@
 
 /* Definition for USARTx clock resources */
 #define USARTx                           USART2
-#define USARTx_CLK_ENABLE()              __HAL_RCC_USART2_CLK_ENABLE();
+#define USARTx_CLK_ENABLE()              __HAL_RCC_USART2_CLK_ENABLE()
 #define USARTx_RX_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOA_CLK_ENABLE()
 #define USARTx_TX_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOA_CLK_ENABLE() 
 
@@ -96,6 +100,34 @@
 #define USARTx_RX_AF                     GPIO_AF7_USART2
 
 
+/* Definition for LED Pins */
+#define GPIO_PORT_LED_RED_CLK_ENABLE()			__GPIOC_CLK_ENABLE()
+#define GPIO_PORT_LED_RED						GPIOC
+#define GPIO_PIN_LED_RED						GPIO_PIN_7
+#define GPIO_PORT_LED_GREEN_CLK_ENABLE()		__GPIOA_CLK_ENABLE()
+#define GPIO_PORT_LED_GREEN						GPIOA
+#define GPIO_PIN_LED_GREEN						GPIO_PIN_10
+#define GPIO_PORT_LED_BLUE_CLK_ENABLE()			__GPIOA_CLK_ENABLE()
+#define GPIO_PORT_LED_BLUE						GPIOA
+#define GPIO_PIN_LED_BLUE						GPIO_PIN_9
+//#define GPIO_PORT_LED_1_CLK_ENABLE()			__GPIOB_CLK_ENABLE()
+//#define GPIO_PORT_LED_1							GPIOA
+//#define GPIO_PIN_LED_1							GPIO_PIN_3
+//#define GPIO_PORT_LED_2_CLK_ENABLE()			__GPIOB_CLK_ENABLE()
+//#define GPIO_PORT_LED_2							GPIOA
+//#define GPIO_PIN_LED_2							GPIO_PIN_3
+
+/* Definition for Key Pins */
+#define GPIO_PORT_KEY1_CLK_ENABLE()				__GPIOB_CLK_ENABLE()
+#define GPIO_PORT_KEY1							GPIOB
+#define GPIO_PIN_KEY1							GPIO_PIN_8
+#define EXTI_KEY1_IRQn							EXTI9_5_IRQn
+#define GPIO_PORT_KEY2_CLK_ENABLE()				__GPIOC_CLK_ENABLE()
+#define GPIO_PORT_KEY2							GPIOC
+#define GPIO_PIN_KEY2							GPIO_PIN_13
+#define EXTI_KEY2_IRQn							EXTI15_10_IRQn
+#define EXTI_KEY_PRE_PRIORITY					PT_EXTI_KEY_PRE_PRIORITY
+#define EXTI_KEY_SUB_PRIORITY					PT_EXTI_KEY_SUB_PRIORITY
 
 /**
 * @brief SPI communication details between Nucleo F4 and BlueNRG

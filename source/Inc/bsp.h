@@ -41,6 +41,8 @@
 #include <stdio.h>			/* 因为用到了printf函数，所以必须包含这个文件 */
 #include "hum_temp.h"
 #include "imu_6axes.h"
+#include "bsp_led.h"
+#include "bsp_key.h"
 
 /* Store Value into a buffer in Little Endian Format */
 #define STORE_LE_16(buf, val)    ( ((buf)[0] =  (uint8_t) (val)    ) , \
