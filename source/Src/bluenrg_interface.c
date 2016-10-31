@@ -85,76 +85,110 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
  */
 void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 {
-  GPIO_InitTypeDef GPIO_InitStruct;
-  if(hspi->Instance==BNRG_SPI_INSTANCE)
-{
-    /* Enable peripherals clock */
+	GPIO_InitTypeDef GPIO_InitStruct;
+	
+	if(hspi->Instance == BNRG_SPI_INSTANCE)
+	{
+		/* Enable peripherals clock */
 
-    /* Enable GPIO Ports Clock */  
-    BNRG_SPI_RESET_CLK_ENABLE();
-    BNRG_SPI_SCLK_CLK_ENABLE();
-    BNRG_SPI_MISO_CLK_ENABLE();
-    BNRG_SPI_MOSI_CLK_ENABLE();
-    BNRG_SPI_CS_CLK_ENABLE();
-    BNRG_SPI_IRQ_CLK_ENABLE();
+		/* Enable GPIO Ports Clock */  
+		BNRG_SPI_RESET_CLK_ENABLE();
+		BNRG_SPI_SCLK_CLK_ENABLE();
+		BNRG_SPI_MISO_CLK_ENABLE();
+		BNRG_SPI_MOSI_CLK_ENABLE();
+		BNRG_SPI_CS_CLK_ENABLE();
+		BNRG_SPI_IRQ_CLK_ENABLE();
 
-    /* Enable SPI clock */
-    BNRG_SPI_CLK_ENABLE();
+		/* Enable SPI clock */
+		BNRG_SPI_CLK_ENABLE();
 
-    /* Reset */
-    GPIO_InitStruct.Pin = BNRG_SPI_RESET_PIN;
-    GPIO_InitStruct.Mode = BNRG_SPI_RESET_MODE;
-    GPIO_InitStruct.Pull = BNRG_SPI_RESET_PULL;
-    GPIO_InitStruct.Speed = BNRG_SPI_RESET_SPEED;
-    GPIO_InitStruct.Alternate = BNRG_SPI_RESET_ALTERNATE;
-    HAL_GPIO_Init(BNRG_SPI_RESET_PORT, &GPIO_InitStruct);	
-    HAL_GPIO_WritePin(BNRG_SPI_RESET_PORT, BNRG_SPI_RESET_PIN, GPIO_PIN_RESET);	/*Added to avoid spurious interrupt from the BlueNRG */
+		/* Reset */
+		GPIO_InitStruct.Pin = BNRG_SPI_RESET_PIN;
+		GPIO_InitStruct.Mode = BNRG_SPI_RESET_MODE;
+		GPIO_InitStruct.Pull = BNRG_SPI_RESET_PULL;
+		GPIO_InitStruct.Speed = BNRG_SPI_RESET_SPEED;
+		GPIO_InitStruct.Alternate = BNRG_SPI_RESET_ALTERNATE;
+		HAL_GPIO_Init(BNRG_SPI_RESET_PORT, &GPIO_InitStruct);	
+		HAL_GPIO_WritePin(BNRG_SPI_RESET_PORT, BNRG_SPI_RESET_PIN, GPIO_PIN_RESET);	/*Added to avoid spurious interrupt from the BlueNRG */
 
-    /* SCLK */
-    GPIO_InitStruct.Pin = BNRG_SPI_SCLK_PIN;
-    GPIO_InitStruct.Mode = BNRG_SPI_SCLK_MODE;
-    GPIO_InitStruct.Pull = BNRG_SPI_SCLK_PULL;
-    GPIO_InitStruct.Speed = BNRG_SPI_SCLK_SPEED;
-    GPIO_InitStruct.Alternate = BNRG_SPI_SCLK_ALTERNATE;
-    HAL_GPIO_Init(BNRG_SPI_SCLK_PORT, &GPIO_InitStruct); 
+		/* SCLK */
+		GPIO_InitStruct.Pin = BNRG_SPI_SCLK_PIN;
+		GPIO_InitStruct.Mode = BNRG_SPI_SCLK_MODE;
+		GPIO_InitStruct.Pull = BNRG_SPI_SCLK_PULL;
+		GPIO_InitStruct.Speed = BNRG_SPI_SCLK_SPEED;
+		GPIO_InitStruct.Alternate = BNRG_SPI_SCLK_ALTERNATE;
+		HAL_GPIO_Init(BNRG_SPI_SCLK_PORT, &GPIO_InitStruct); 
 
-    /* MISO */
-    GPIO_InitStruct.Pin = BNRG_SPI_MISO_PIN;
-    GPIO_InitStruct.Mode = BNRG_SPI_MISO_MODE;
-    GPIO_InitStruct.Pull = BNRG_SPI_MISO_PULL;
-    GPIO_InitStruct.Speed = BNRG_SPI_MISO_SPEED;
-    GPIO_InitStruct.Alternate = BNRG_SPI_MISO_ALTERNATE;
-    HAL_GPIO_Init(BNRG_SPI_MISO_PORT, &GPIO_InitStruct);
+		/* MISO */
+		GPIO_InitStruct.Pin = BNRG_SPI_MISO_PIN;
+		GPIO_InitStruct.Mode = BNRG_SPI_MISO_MODE;
+		GPIO_InitStruct.Pull = BNRG_SPI_MISO_PULL;
+		GPIO_InitStruct.Speed = BNRG_SPI_MISO_SPEED;
+		GPIO_InitStruct.Alternate = BNRG_SPI_MISO_ALTERNATE;
+		HAL_GPIO_Init(BNRG_SPI_MISO_PORT, &GPIO_InitStruct);
 
-    /* MOSI */
-    GPIO_InitStruct.Pin = BNRG_SPI_MOSI_PIN;
-    GPIO_InitStruct.Mode = BNRG_SPI_MOSI_MODE;
-    GPIO_InitStruct.Pull = BNRG_SPI_MOSI_PULL;
-    GPIO_InitStruct.Speed = BNRG_SPI_MOSI_SPEED;
-    GPIO_InitStruct.Alternate = BNRG_SPI_MOSI_ALTERNATE;
-    HAL_GPIO_Init(BNRG_SPI_MOSI_PORT, &GPIO_InitStruct);
+		/* MOSI */
+		GPIO_InitStruct.Pin = BNRG_SPI_MOSI_PIN;
+		GPIO_InitStruct.Mode = BNRG_SPI_MOSI_MODE;
+		GPIO_InitStruct.Pull = BNRG_SPI_MOSI_PULL;
+		GPIO_InitStruct.Speed = BNRG_SPI_MOSI_SPEED;
+		GPIO_InitStruct.Alternate = BNRG_SPI_MOSI_ALTERNATE;
+		HAL_GPIO_Init(BNRG_SPI_MOSI_PORT, &GPIO_InitStruct);
 
-    /* NSS/CSN/CS */
-    GPIO_InitStruct.Pin = BNRG_SPI_CS_PIN;
-    GPIO_InitStruct.Mode = BNRG_SPI_CS_MODE;
-    GPIO_InitStruct.Pull = BNRG_SPI_CS_PULL;
-    GPIO_InitStruct.Speed = BNRG_SPI_CS_SPEED;
-    GPIO_InitStruct.Alternate = BNRG_SPI_CS_ALTERNATE;
-    HAL_GPIO_Init(BNRG_SPI_CS_PORT, &GPIO_InitStruct);
-    HAL_GPIO_WritePin(BNRG_SPI_CS_PORT, BNRG_SPI_CS_PIN, GPIO_PIN_SET);
+		/* NSS/CSN/CS */
+		GPIO_InitStruct.Pin = BNRG_SPI_CS_PIN;
+		GPIO_InitStruct.Mode = BNRG_SPI_CS_MODE;
+		GPIO_InitStruct.Pull = BNRG_SPI_CS_PULL;
+		GPIO_InitStruct.Speed = BNRG_SPI_CS_SPEED;
+		GPIO_InitStruct.Alternate = BNRG_SPI_CS_ALTERNATE;
+		HAL_GPIO_Init(BNRG_SPI_CS_PORT, &GPIO_InitStruct);
+		HAL_GPIO_WritePin(BNRG_SPI_CS_PORT, BNRG_SPI_CS_PIN, GPIO_PIN_SET);
 
-    /* IRQ -- INPUT */
-    GPIO_InitStruct.Pin = BNRG_SPI_IRQ_PIN;
-    GPIO_InitStruct.Mode = BNRG_SPI_IRQ_MODE;
-    GPIO_InitStruct.Pull = BNRG_SPI_IRQ_PULL;
-    GPIO_InitStruct.Speed = BNRG_SPI_IRQ_SPEED;
-    GPIO_InitStruct.Alternate = BNRG_SPI_IRQ_ALTERNATE;
-    HAL_GPIO_Init(BNRG_SPI_IRQ_PORT, &GPIO_InitStruct);
+		/* IRQ -- INPUT */
+		GPIO_InitStruct.Pin = BNRG_SPI_IRQ_PIN;
+		GPIO_InitStruct.Mode = BNRG_SPI_IRQ_MODE;
+		GPIO_InitStruct.Pull = BNRG_SPI_IRQ_PULL;
+		GPIO_InitStruct.Speed = BNRG_SPI_IRQ_SPEED;
+		GPIO_InitStruct.Alternate = BNRG_SPI_IRQ_ALTERNATE;
+		HAL_GPIO_Init(BNRG_SPI_IRQ_PORT, &GPIO_InitStruct);
 
-    /* Configure the NVIC for SPI */  
-    HAL_NVIC_SetPriority(BNRG_SPI_EXTI_IRQn, 3, 0);    
-    HAL_NVIC_EnableIRQ(BNRG_SPI_EXTI_IRQn);
-  }
+		/* Configure the NVIC for SPI */  
+		HAL_NVIC_SetPriority(BNRG_SPI_EXTI_IRQn, 3, 0);    
+		HAL_NVIC_EnableIRQ(BNRG_SPI_EXTI_IRQn);
+	}
+	
+	if(hspi->Instance == SPI_ADS1118)
+	{
+		/*##-1- Enable peripherals and GPIO Clocks #################################*/
+		/* Enable GPIO TX/RX clock */
+		ADS1118_SPI_SCK_GPIO_CLK_ENABLE();
+		ADS1118_SPI_MISO_GPIO_CLK_ENABLE();
+		ADS1118_SPI_MOSI_GPIO_CLK_ENABLE();
+		/* Enable SPI clock */
+		ADS1118_SPI_CLK_ENABLE(); 
+
+		/*##-2- Configure peripheral GPIO ##########################################*/  
+		/* SPI SCK GPIO pin configuration  */
+		GPIO_InitStruct.Pin       = ADS1118_SPI_SCK_PIN;
+		GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Pull      = GPIO_PULLUP;
+		GPIO_InitStruct.Speed     = GPIO_SPEED_FAST;
+		GPIO_InitStruct.Alternate = ADS1118_SPI_SCK_AF;
+
+		HAL_GPIO_Init(ADS1118_SPI_SCK_GPIO_PORT, &GPIO_InitStruct);
+
+		/* SPI MISO GPIO pin configuration  */
+		GPIO_InitStruct.Pin = ADS1118_SPI_MISO_PIN;
+		GPIO_InitStruct.Alternate = ADS1118_SPI_MISO_AF;
+
+		HAL_GPIO_Init(ADS1118_SPI_MISO_GPIO_PORT, &GPIO_InitStruct);
+
+		/* SPI MOSI GPIO pin configuration  */
+		GPIO_InitStruct.Pin = ADS1118_SPI_MOSI_PIN;
+		GPIO_InitStruct.Alternate = ADS1118_SPI_MOSI_AF;
+
+		HAL_GPIO_Init(ADS1118_SPI_MOSI_GPIO_PORT, &GPIO_InitStruct);		
+	}
 }
 
 /**

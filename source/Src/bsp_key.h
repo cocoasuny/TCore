@@ -41,7 +41,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "platform.h"
+#include "main.h"
 
 
 /* type define */

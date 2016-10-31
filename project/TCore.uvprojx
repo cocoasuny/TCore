@@ -503,6 +503,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\Src\bluenrg_remotecontrol_service.c</FilePath>
             </File>
+            <File>
+              <FileName>FreeRTOSConfig.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\source\Inc\FreeRTOSConfig.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -602,6 +607,11 @@
               <FileName>lsm6ds3.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\Drivers\Components\lsm6ds3.c</FilePath>
+            </File>
+            <File>
+              <FileName>ads1118.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\Drivers\Components\ads1118.c</FilePath>
             </File>
           </Files>
         </Group>

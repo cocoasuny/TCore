@@ -76,10 +76,14 @@
     #define Log  USBLog
 #endif    
 
-
+#define VALIDE		true
+#define INVALIDE    false
 
 
 #define SYSCLK_FREQ 84000000
+/* define key Long press time */
+#define LONG_PRESS_TIME           1000    // ms,长按键检测时间
+#define KEY_INVALIDE_TIME         200     // ms,按键响应间隔时间
 
 
 /* Definition for USARTx clock resources */
@@ -128,6 +132,28 @@
 #define EXTI_KEY2_IRQn							EXTI15_10_IRQn
 #define EXTI_KEY_PRE_PRIORITY					PT_EXTI_KEY_PRE_PRIORITY
 #define EXTI_KEY_SUB_PRIORITY					PT_EXTI_KEY_SUB_PRIORITY
+
+
+/* Definition for ADS1118 Pins */
+#define GPIO_PORT_ADS1118_CS_CLK_ENABLE()		__GPIOB_CLK_ENABLE()
+#define	GPIO_PORT_ADS1118_CS					GPIOB
+#define GPIO_PIN_ADS1118_CS						GPIO_PIN_12
+#define SPI_ADS1118								SPI2
+#define ADS1118_SPI_SCK_GPIO_CLK_ENABLE()		__HAL_RCC_GPIOB_CLK_ENABLE()
+#define ADS1118_SPI_MISO_GPIO_CLK_ENABLE()		__HAL_RCC_GPIOB_CLK_ENABLE()
+#define ADS1118_SPI_MOSI_GPIO_CLK_ENABLE()		__HAL_RCC_GPIOB_CLK_ENABLE()
+#define ADS1118_SPI_CLK_ENABLE()				__HAL_RCC_SPI2_CLK_ENABLE()
+
+/* Definition for SPIx Pins */
+#define ADS1118_SPI_SCK_PIN                     GPIO_PIN_13
+#define ADS1118_SPI_SCK_GPIO_PORT               GPIOB
+#define ADS1118_SPI_SCK_AF                      GPIO_AF5_SPI2
+#define ADS1118_SPI_MISO_PIN                    GPIO_PIN_14
+#define ADS1118_SPI_MISO_GPIO_PORT              GPIOB
+#define ADS1118_SPI_MISO_AF                     GPIO_AF5_SPI2
+#define ADS1118_SPI_MOSI_PIN                    GPIO_PIN_15
+#define ADS1118_SPI_MOSI_GPIO_PORT              GPIOB
+#define ADS1118_SPI_MOSI_AF                     GPIO_AF5_SPI2
 
 /**
 * @brief SPI communication details between Nucleo F4 and BlueNRG

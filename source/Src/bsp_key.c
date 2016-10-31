@@ -39,6 +39,14 @@
 #include "bsp_key.h"
 
 
+/* private variables */
+static TimerHandle_t s_Key1Timer = NULL;
+volatile static bool s_KeyPressStatus = VALIDE;
+static TimerHandle_t s_Key2Timer = NULL;
+
+/* privatr function */
+static void key_press_time_cb(xTimerHandle pxTimer);
+
 
 /**
  * @brief		Keyx_Init,config the keys pin 
@@ -93,7 +101,66 @@ void Keyx_Init(KEY_T key)
  */
 void Key1_EXTI_Handle(void)
 {
-
+	static bool 				keyPressDectetCtl = true; //true:检测下降沿，false:检测上升沿
+	static uint32_t				pressDownTick = 0;
+	BaseType_t 					xHigherPriorityTaskWoken = pdFALSE;
+	BaseType_t					xResult = pdFAIL;
+	
+	if(s_KeyPressStatus == INVALIDE)
+	{
+		keyPressDectetCtl = true;
+		pressDownTick = 0;
+	}
+	else if(s_KeyPressStatus == VALIDE)
+	{
+		if(keyPressDectetCtl == true) //当次检测下降沿
+		{
+			keyPressDectetCtl = false; //下次检测上升沿
+			if(HAL_GPIO_ReadPin(GPIO_PORT_KEY1,GPIO_PIN_KEY1) == GPIO_PIN_RESET)  //Key1按下
+			{
+				s_Key1Timer = xTimerCreate("Key1Time",LONG_PRESS_TIME,pdFALSE,(void *)1,key_press_time_cb);
+				xResult = xTimerStartFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
+				pressDownTick = HAL_GetTick();
+				if(xResult != pdFAIL)
+				{
+					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				}
+			}
+		}
+		else if(keyPressDectetCtl == false) //当次检测上升沿
+		{
+			keyPressDectetCtl = true; //下次检测下降沿
+			if(HAL_GPIO_ReadPin(GPIO_PORT_KEY1,GPIO_PIN_KEY1) == GPIO_PIN_SET)  //Key1松开
+			{
+				if((HAL_GetTick() - pressDownTick) < LONG_PRESS_TIME)
+				{
+					printf("Key1 Short Press\r\n");
+				}
+				else
+				{
+					printf("Key1 Long Press\r\n");
+				}
+				xResult = xTimerStopFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
+				if(xResult != pdFAIL)
+				{
+					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				}
+				
+				s_KeyPressStatus = INVALIDE;
+				
+				xResult = xTimerChangePeriodFromISR(s_Key1Timer,KEY_INVALIDE_TIME,&xHigherPriorityTaskWoken);
+				if(xResult != pdFAIL)
+				{
+					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				}
+				xResult = xTimerStartFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
+				if(xResult != pdFAIL)
+				{
+					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				}				
+			}
+		}
+	}
 }
 
 /**
@@ -106,8 +173,26 @@ void Key2_EXTI_Handle(void)
 
 }
  
- 
- 
+/**
+ * @brief		key_press_time_cb，！！！这是一个中断服务函数
+ * @param[in]	None
+ * @retval		None
+ */ 
+static void key_press_time_cb(xTimerHandle pxTimer)
+{
+	if(s_KeyPressStatus == VALIDE)
+	{
+		//Valide的情况下，说明按键超时，属于长按键事件
+		s_KeyPressStatus = INVALIDE;
+		printf("Key1 Long Press\r\n");
+		xTimerDelete(s_Key1Timer,0);
+	}
+	else
+	{
+		s_KeyPressStatus = VALIDE;
+		xTimerDelete(s_Key1Timer,0);
+	}
+}	
  
  
  
