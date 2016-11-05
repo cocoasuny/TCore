@@ -50,6 +50,7 @@
 //#define Debug_Sensor_Press
 //#define Debug_Sensor_Temperature
 #define Debug_LedControl
+#define BEBUG_TEMPERATURE
 
 
 /* Shell Switch */
@@ -57,12 +58,19 @@
 #define RTC_SHELL       //注释掉屏蔽RTC Shell功能
 #define FATFS_SHELL
 
-#define RXBUFFERSIZE          1
+#define RXBUFFERSIZE        1
+#define OFF					0
+#define ON					1
+
 
 /******** Task define ********************/
 /* BlueNRG HCI Process Task */
 #define Task_BlueNRGHCI_Stack        500    //task stack
 #define Task_BlueNRGHCI_Priority     2      //task priority
+
+/* core temperature task define */
+#define Task_CoreTemperature_Stack		500
+#define Task_CoreTemperature_Priority	3
 
 
 /* NVIC Priority define */
@@ -144,7 +152,7 @@
 #define ADS1118_SPI_MOSI_GPIO_CLK_ENABLE()		__HAL_RCC_GPIOB_CLK_ENABLE()
 #define ADS1118_SPI_CLK_ENABLE()				__HAL_RCC_SPI2_CLK_ENABLE()
 
-/* Definition for SPIx Pins */
+/* Definition for ADS1118 SPI Pins */
 #define ADS1118_SPI_SCK_PIN                     GPIO_PIN_13
 #define ADS1118_SPI_SCK_GPIO_PORT               GPIOB
 #define ADS1118_SPI_SCK_AF                      GPIO_AF5_SPI2
@@ -154,6 +162,24 @@
 #define ADS1118_SPI_MOSI_PIN                    GPIO_PIN_15
 #define ADS1118_SPI_MOSI_GPIO_PORT              GPIOB
 #define ADS1118_SPI_MOSI_AF                     GPIO_AF5_SPI2
+
+/* Definition for ref temperature channel switch Pins */
+#define GPIO_PORT_REF_TEM_CTL0_CLK_ENABLE()		__GPIOB_CLK_ENABLE()
+#define	GPIO_PORT_REF_TEM_CTL0					GPIOB
+#define GPIO_PIN_REF_TEM_CTL0					GPIO_PIN_0
+#define GPIO_PORT_REF_TEM_CTL1_CLK_ENABLE()		__GPIOA_CLK_ENABLE()
+#define	GPIO_PORT_REF_TEM_CTL1					GPIOA
+#define GPIO_PIN_REF_TEM_CTL1					GPIO_PIN_8
+
+/* Definition for core temperature channel switch Pins */
+#define GPIO_PORT_CORE_TEM_CTL0_CLK_ENABLE()		__GPIOA_CLK_ENABLE()
+#define	GPIO_PORT_CORE_TEM_CTL0						GPIOA
+#define GPIO_PIN_CORE_TEM_CTL0						GPIO_PIN_1
+#define GPIO_PORT_CORE_TEM_CTL1_CLK_ENABLE()		__GPIOA_CLK_ENABLE()
+#define	GPIO_PORT_CORE_TEM_CTL1						GPIOA
+#define GPIO_PIN_CORE_TEM_CTL1						GPIO_PIN_0
+
+
 
 /**
 * @brief SPI communication details between Nucleo F4 and BlueNRG

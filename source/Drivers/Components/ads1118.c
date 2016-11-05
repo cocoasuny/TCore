@@ -72,10 +72,10 @@ HAL_StatusTypeDef ads1118_init(void)
 }
 /**
   * @brief  ads1118_getVal
-  * @param  CMD,int16_t * pDatRe 
+  * @param  CMD,float * pVsens(电压值) 
   * @retval Status
   */
-HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, int16_t * pDatRe)
+HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, float * pVsens)
 {
 	uint8_t   					CMD_H=0;
 	uint8_t   					CMD_L=0;
@@ -105,7 +105,10 @@ HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, int16_t * pDatRe)
 		App_Error_Check(HAL_ERROR);
 	}			
 
-	(*pDatRe) = (SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1];
+	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.03125);//FS1 = FS/32768
+//	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.015625);//FS05 = FS/32768
+//	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.0078125);//FS02= FS/32768
+//	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.0625);//FS2 = FS/32768
 	
 	return(ret); 
 }

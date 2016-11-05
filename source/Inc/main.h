@@ -58,18 +58,28 @@
 #include "bsp_rtc_calendar.h"
 #include "Log.h"
 #include "bsp_imu_6axes.h"
+#include "core_temperature.h"
+#include "bsp_temperature.h"
+#include "alg_temperature.h"
 
+/* Define sub-function status */
+#define REF_TEMPERATURE_MEASURE_STATUS 			(1 << 0)
+#define CORE_TEMPERATURE_MEASURE_STATUS 		(1 << 1)
 
-extern volatile AxesRaw_t g_Axes_data;
-extern uint16_t g_LedFlashTime;
-extern uint8_t  g_aRxBuffer[RXBUFFERSIZE];
-extern char SDPath[4];  /* SD logical drive path */
-extern FATFS SDFatFs;  /* File system object for SD card logical drive */
-extern FIL  MyFile;     /* File object */
+extern volatile AxesRaw_t 					g_Axes_data;
+extern uint16_t 							g_LedFlashTime;
+extern uint8_t  							g_aRxBuffer[RXBUFFERSIZE];
+extern char 								SDPath[4];  /* SD logical drive path */
+extern FATFS 								SDFatFs;  /* File system object for SD card logical drive */
+extern FIL  								MyFile;     /* File object */
+extern QueueHandle_t						coreTemEventQueue;
+extern float								g_refTemVal;
+extern float								g_coreTemVal;  //核心温度结果值
 
 void MX_GPIO_Init(void);
 void MX_SDIO_SD_Init(void);
-
+void gSubFunc_stat_set(uint16_t mask, uint8_t newState);
+uint16_t gSubFunc_stat_get(uint16_t mask);
 
 
 #endif /* __MAIN_H_ */

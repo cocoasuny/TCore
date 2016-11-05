@@ -35,11 +35,15 @@
 
 
 /* Global variables ----------------------------------------------------------*/
-volatile AxesRaw_t g_Axes_data = {0, 0, 0};
-uint16_t g_LedFlashTime = 500;
-uint8_t  g_aRxBuffer[RXBUFFERSIZE] = {0};
+volatile AxesRaw_t 					g_Axes_data = {0, 0, 0};
+uint16_t 							g_LedFlashTime = 500;
+uint8_t  							g_aRxBuffer[RXBUFFERSIZE] = {0};
+QueueHandle_t						coreTemEventQueue = NULL;  //event queue for core temperature
+float								g_refTemVal = 0;   //参考温度结果值
+float								g_coreTemVal = 0;  //核心温度结果值
 
 /* Private variables ---------------------------------------------------------*/
+static uint16_t 					gSubFuncState = OFF;
 SD_HandleTypeDef hsd;
 HAL_SD_CardInfoTypedef SDCardInfo;
 char SDPath[4];  /* SD logical drive path */
@@ -49,6 +53,7 @@ FIL  MyFile;     /* File object */
 /* Private variables ---------------------------------------------------------*/
 xTaskHandle  xHandleLedCtl;
 xTaskHandle  xHandleBlueNRGHCI;
+xTaskHandle  xHandleCoreTemperature;
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -97,13 +102,17 @@ int main(void)
                 Task_BlueNRGHCI_Stack,      //stack大小，单位word
                 NULL,                       //任务参数
                 Task_BlueNRGHCI_Priority,   //任务优先级
-                &xHandleBlueNRGHCI);        //任务句柄           
+                &xHandleBlueNRGHCI);        //任务句柄  
+
+	/* core temperature measure task */
+	xTaskCreate(coreTemperatureTaskHandle,"Tcore",Task_CoreTemperature_Stack,NULL,
+				Task_CoreTemperature_Priority,&xHandleCoreTemperature);
                 
     /* Start scheduler */
     vTaskStartScheduler();
 
     /* We should never get here as control is now taken by the scheduler */
-
+	printf("Scheduler Err\r\n");
     /* Infinite loop */
     /* USER CODE BEGIN WHILE */
     while (1)
@@ -148,7 +157,26 @@ void LedCtlTask(void *pvParameters)
         vTaskDelay(g_LedFlashTime);     //控制LDE闪烁频率
     }
 }
-
+/**
+  * @brief  gSubFunc_stat_set
+  * @note   设置测量状态
+  * @param  mask,newState
+  * @retval None    
+  */
+void gSubFunc_stat_set(uint16_t mask, uint8_t newState)
+{
+	gSubFuncState = (newState == OFF)? gSubFuncState & (~mask) : gSubFuncState | mask;
+}
+/**
+  * @brief  gSubFunc_stat_get
+  * @note   获取测量状态
+  * @param  mask
+  * @retval status    
+  */
+uint16_t gSubFunc_stat_get(uint16_t mask)
+{
+	return(gSubFuncState & mask);
+}
 /** System Clock Configuration
 */
 void SystemClock_Config(void)
