@@ -60,7 +60,6 @@ xTaskHandle  xHandleCoreTemperature;
 void SystemClock_Config(void);
 void LedCtlTask(void *pvParameters);
 
-
 /*******************************************************************************
 * Function Name  : main函数
 * Description    : main函数
@@ -85,7 +84,8 @@ int main(void)
     BlueNRG_Init();
 
     /* Create the Tasks */
-
+	key_time_init();
+	
     /* Led Control Task */
     xTaskCreate(
                 LedCtlTask,                 //任务函数

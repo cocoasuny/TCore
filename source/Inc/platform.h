@@ -50,7 +50,8 @@
 //#define Debug_Sensor_Press
 //#define Debug_Sensor_Temperature
 #define Debug_LedControl
-#define BEBUG_TEMPERATURE
+#define DEBUG_TEMPERATURE
+#define DEBUG_KEY_PRESS
 
 
 /* Shell Switch */

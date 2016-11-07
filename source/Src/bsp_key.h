@@ -54,6 +54,7 @@ typedef enum
 
 /* function declare */
 void Keyx_Init(KEY_T key);
+void key_time_init(void);
 void Key1_EXTI_Handle(void);
 void Key2_EXTI_Handle(void);
 

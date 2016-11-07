@@ -39,7 +39,7 @@ void coreTemperatureTaskHandle(void *pvParameters)
 	
 	/* creat event queue for core temperature */
 	coreTemEventQueue = xQueueCreate(CORE_TEMPERATURE_EVENT_QUEUE_SIZE,sizeof(TEM_MSG_T));
-	#ifdef BEBUG_TEMPERATURE
+	#ifdef DEBUG_TEMPERATURE
 		if(coreTemEventQueue == NULL)
 		{
 			printf("temperature queue creat fail\r\n");
@@ -55,7 +55,7 @@ void coreTemperatureTaskHandle(void *pvParameters)
 		if(pdPASS == xQueueReceive(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime))
 		{
 			/* 接收到消息 */
-			#ifdef BEBUG_TEMPERATURE
+			#ifdef DEBUG_TEMPERATURE
 				printf("tem event:%d\r\n",temQueueMsgValue.eventID);
 			#endif
 			switch(temQueueMsgValue.eventID)
@@ -175,13 +175,13 @@ static void ref_temperature_rt_sample(uint32_t *Rt)
 	/* init ref temperature measure hw source */
 	ref_temperature_init();
 	ref_temperature_sample(&Vsens12,&Vsens23);
-	#ifdef BEBUG_TEMPERATURE
+	#ifdef DEBUG_TEMPERATURE
 		printf("ADval12:%0.01f,23:%0.01f\r\n",Vsens12,Vsens23);
 	#endif
 	
 	/* calculate the value of Rt */
 	*Rt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
-	#ifdef BEBUG_TEMPERATURE
+	#ifdef DEBUG_TEMPERATURE
 		printf("Rt:%dΩ\r\n",Rt);
 	#endif
 	

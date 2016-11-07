@@ -57,7 +57,7 @@
 
 /* Ble parameters define */
 const char *devicename = "BlueNRG";    //DeviceMaxName:10
-uint8_t g_tx_power_level = 6;
+uint8_t g_tx_power_level = 2;
 uint16_t service_handle, dev_name_char_handle, appearance_char_handle;
 volatile uint16_t connection_handle = 0;
 
@@ -217,7 +217,7 @@ tBleStatus Ble_SetTx_Power(uint8_t level)
     tBleStatus ret;
     
     /* Set output power level */
-    ret = aci_hal_set_tx_power_level(1,level);
+    ret = aci_hal_set_tx_power_level(0,level);
 
     return ret;
 }
