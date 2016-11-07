@@ -105,8 +105,8 @@ int main(void)
                 &xHandleBlueNRGHCI);        //任务句柄  
 
 	/* core temperature measure task */
-	xTaskCreate(coreTemperatureTaskHandle,"Tcore",Task_CoreTemperature_Stack,NULL,
-				Task_CoreTemperature_Priority,&xHandleCoreTemperature);
+//	xTaskCreate(coreTemperatureTaskHandle,"Tcore",Task_CoreTemperature_Stack,NULL,
+//				Task_CoreTemperature_Priority,&xHandleCoreTemperature);
                 
     /* Start scheduler */
     vTaskStartScheduler();
@@ -153,7 +153,7 @@ void LedCtlTask(void *pvParameters)
         g_Axes_data.AXIS_X = Axes.AXIS_X;
         g_Axes_data.AXIS_Y = Axes.AXIS_Y;
         g_Axes_data.AXIS_Z = Axes.AXIS_Z;
-        BlueNRG_Update_Acc((AxesRaw_t*)&g_Axes_data);
+//        BlueNRG_Update_Acc((AxesRaw_t*)&g_Axes_data);
         vTaskDelay(g_LedFlashTime);     //控制LDE闪烁频率
     }
 }

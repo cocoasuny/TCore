@@ -180,12 +180,12 @@ void OTG_FS_IRQHandler(void)
 /**
 * @brief This function handles USART1 global interrupt.
 */
-void USART1_IRQHandler(void)
+void USART2_IRQHandler(void)
 {
   /* USER CODE BEGIN USART1_IRQn 0 */
     
   /* USER CODE END USART1_IRQn 0 */
-  HAL_UART_IRQHandler(&huart1);
+  HAL_UART_IRQHandler(&huart2);
   	
   /* USER CODE BEGIN USART1_IRQn 1 */
 
@@ -220,7 +220,7 @@ void EXTI15_10_IRQHandler(void)
   */
 void EXTI9_5_IRQHandler(void)
 {
-	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_KEY2) != RESET)
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_KEY1) != RESET)
 	{
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_KEY1);
 	}

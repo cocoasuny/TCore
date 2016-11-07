@@ -94,10 +94,9 @@
 
 #define HUM_TEMP_DRDY_EXTI_IRQn           EXTI1_IRQn
 
-extern UART_HandleTypeDef huart1;
+extern UART_HandleTypeDef huart2;
 
 
-void MX_USART1_UART_Init(void);
 void MX_USART2_UART_Init(void);
 void Bsp_Init(void);
 void BSP_LED_Init(void);
@@ -105,7 +104,6 @@ void BSP_LED_On(void );
 void BSP_LED_Off(void);
 void BSP_LED_Toggle(void);
 void USBLog(const char* lpszFormat, ...);
-void BSP_Usart_DataSend(uint8_t *dataToSend , uint8_t length);
 void app_error_handler(uint32_t error_code, uint32_t line_num, const uint8_t * p_file_name);
 void Sys_SoftReset(void);
 

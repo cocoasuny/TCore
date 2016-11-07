@@ -72,7 +72,7 @@ void Keyx_Init(KEY_T key)
 
 			/* Enable and set EXTI Line Interrupt priority */
 			HAL_NVIC_SetPriority(EXTI_KEY1_IRQn, EXTI_KEY_PRE_PRIORITY, EXTI_KEY_SUB_PRIORITY);
-			HAL_NVIC_EnableIRQ(EXTI_KEY1_IRQn);			
+			HAL_NVIC_EnableIRQ(EXTI_KEY1_IRQn);	        
 		}
 		break;
 		case KEY2:
@@ -105,7 +105,8 @@ void Key1_EXTI_Handle(void)
 	static uint32_t				pressDownTick = 0;
 	BaseType_t 					xHigherPriorityTaskWoken = pdFALSE;
 	BaseType_t					xResult = pdFAIL;
-	
+
+    
 	if(s_KeyPressStatus == INVALIDE)
 	{
 		keyPressDectetCtl = true;
@@ -118,13 +119,19 @@ void Key1_EXTI_Handle(void)
 			keyPressDectetCtl = false; //下次检测上升沿
 			if(HAL_GPIO_ReadPin(GPIO_PORT_KEY1,GPIO_PIN_KEY1) == GPIO_PIN_RESET)  //Key1按下
 			{
-				s_Key1Timer = xTimerCreate("Key1Time",LONG_PRESS_TIME,pdFALSE,(void *)1,key_press_time_cb);
-				xResult = xTimerStartFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
-				pressDownTick = HAL_GetTick();
-				if(xResult != pdFAIL)
-				{
-					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-				}
+                printf("key1 press down\r\n");
+				s_Key1Timer = xTimerCreate("Time",LONG_PRESS_TIME,pdFALSE,(void *)1,key_press_time_cb);
+                printf("timer ok\r\n");
+                if(s_Key1Timer == NULL)
+                {
+                    printf("timer err\r\n");
+                }
+//				xResult = xTimerStartFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
+//				pressDownTick = HAL_GetTick();
+//				if(xResult != pdFAIL)
+//				{
+//					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+//				}
 			}
 		}
 		else if(keyPressDectetCtl == false) //当次检测上升沿

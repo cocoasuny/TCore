@@ -323,7 +323,7 @@ tBleStatus aci_gatt_update_char_value(uint16_t servHandle,
   uint8_t status;
   uint8_t buffer[HCI_MAX_PAYLOAD_SIZE];
   uint8_t indx = 0;
-    
+
   if ((charValueLen+6) > HCI_MAX_PAYLOAD_SIZE)
     return BLE_STATUS_INVALID_PARAMS;
 

@@ -90,8 +90,8 @@
 
 #define SYSCLK_FREQ 84000000
 /* define key Long press time */
-#define LONG_PRESS_TIME           1000    // ms,长按键检测时间
-#define KEY_INVALIDE_TIME         200     // ms,按键响应间隔时间
+#define LONG_PRESS_TIME           pdMS_TO_TICKS(1000)    // ms,长按键检测时间
+#define KEY_INVALIDE_TIME         pdMS_TO_TICKS(200)     // ms,按键响应间隔时间
 
 
 /* Definition for USARTx clock resources */
