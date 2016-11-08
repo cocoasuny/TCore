@@ -81,29 +81,34 @@ HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, float * pVsens)
 	uint8_t   					CMD_L=0;
 	uint8_t   					SPI_Rx_Buf[2]={0};
 	HAL_StatusTypeDef			ret = HAL_ERROR;
-	uint8_t						aTxBuffer[1] = {0};
-	uint8_t						aRxBuffer[1] = {0};
+	uint8_t						aTxBuffer[2] = {0};
+	uint8_t						aRxBuffer[2] = {0};
 
 	CMD_H = (uint8_t)(0x00FF & (CMD >> 8));
 	CMD_L = (uint8_t)(0x00FF & CMD);
 	
 	aTxBuffer[0] = CMD_H;
+    aTxBuffer[1] = CMD_L;
+    
 	HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_RESET);
-	ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 1, 5000); 
+	ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 2, 5000); 
+
+    HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_SET);
+    
+    HAL_Delay(10);
+
+	HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_RESET);
+	ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 2, 5000); 
+
+    HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_SET);
+    
 	SPI_Rx_Buf[0] = aRxBuffer[0];
+    SPI_Rx_Buf[1] = aRxBuffer[1];
 	if(ret != HAL_OK)
 	{
 		App_Error_Check(HAL_ERROR);
 	}
-
-	aTxBuffer[0] = CMD_L;
-	ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 1, 5000);
-	HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_SET);	
-	SPI_Rx_Buf[1] = aRxBuffer[0];
-	if(ret != HAL_OK)
-	{
-		App_Error_Check(HAL_ERROR);
-	}			
+		
 
 //	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.03125);//FS1 = FS/32768
 //	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.015625);//FS05 = FS/32768
