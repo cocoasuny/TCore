@@ -51,11 +51,13 @@ void ref_temperature_sample(float *VSens12,float *VSens23)
 	ref_temperature_channel_switch(ChannelA0B0);
 	ads1118_getVal(ADS1118Start | DifferentialCH2_3, &V_sens);
 	*VSens12 = V_sens;
-	
+
+	HAL_Delay(10);
+    
 	/* switch the ref temperature chanel */
 	ref_temperature_channel_switch(ChannelA1B1);
 	ads1118_getVal(ADS1118Start | DifferentialCH2_3, &V_sens);
-	*VSens23 = V_sens;	
+	*VSens23 = V_sens;
 }
 /**
   * @brief  ref_temperature_deinit

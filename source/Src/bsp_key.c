@@ -116,6 +116,7 @@ void Key1_EXTI_Handle(void)
 	static uint32_t				pressDownTick = 0;
 	BaseType_t 					xHigherPriorityTaskWoken = pdFALSE;
 	BaseType_t					xResult = pdFAIL;
+    USER_INTERFACE_MSG_T        UIQueueMsgValue;
 
 	if(s_KeyLongPressTimeOutFlag == true)
 	{
@@ -152,7 +153,14 @@ void Key1_EXTI_Handle(void)
 					#ifdef DEBUG_KEY_PRESS
 						printf("Key1 Short Press\r\n");
 					#endif
+                    /* send the short press event */
+                    UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_SHORT_PRESS;
+                    xQueueSendFromISR(userInterFaceEventQueue,(void *)&UIQueueMsgValue,&xHigherPriorityTaskWoken);
 					s_KeyPressStatus = INVALIDE;
+                    if( xHigherPriorityTaskWoken )
+                    {
+                        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+                    }
 					
 					xResult = xTimerStopFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
 					if(xResult != pdFAIL)
@@ -192,6 +200,9 @@ void Key2_EXTI_Handle(void)
  */ 
 static void key_press_time_cb(xTimerHandle pxTimer)
 {
+    USER_INTERFACE_MSG_T        UIQueueMsgValue;
+    const TickType_t 		    xMaxBlockTime = pdMS_TO_TICKS(100); /* 设置最大等待时间为 100ms */
+    
 	if(s_KeyPressStatus == VALIDE)
 	{
 		//Valide的情况下，说明按键超时，属于长按键事件
@@ -200,6 +211,11 @@ static void key_press_time_cb(xTimerHandle pxTimer)
 		#ifdef DEBUG_KEY_PRESS
 			printf("Key1 Long Press\r\n");
 		#endif
+        
+        /* send the long press event */
+        UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_LONG_PRESS;
+        xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime); 
+        
 		xTimerChangePeriod(s_Key1Timer,KEY_INVALIDE_TIME,pdMS_TO_TICKS(100));
 	}
 	else

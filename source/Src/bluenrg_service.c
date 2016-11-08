@@ -265,13 +265,13 @@ static void Read_Request_CB(uint16_t handle)
 //                                    // a short time after the connection,
 //                                    // a pop-up reports a "No valid characteristics found" error.
         /* Get Temperature */
-		if(gSubFunc_stat_get(CORE_TEMPERATURE_MEASURE_STATUS) != OFF)
-		{
-			fTmp = g_coreTemVal;
-			data = (uint16_t)(fTmp*10);
-			Temp_Update(data);
-		}
-		else if(gSubFunc_stat_get(REF_TEMPERATURE_MEASURE_STATUS) != OFF)
+//		if(gSubFunc_stat_get(CORE_TEMPERATURE_MEASURE_STATUS) != OFF)
+//		{
+//			fTmp = g_coreTemVal;
+//			data = (uint16_t)(fTmp*10);
+//			Temp_Update(data);
+//		}
+		if(gSubFunc_stat_get(TEMPERATURE_MEASURE_STATUS) != OFF)
 		{
 			fTmp = g_refTemVal;
 			data = (uint16_t)(fTmp*10);

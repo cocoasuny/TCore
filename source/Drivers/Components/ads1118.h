@@ -69,7 +69,7 @@
 #define NOP              0x0000
 #define UpdateCR         0x0002
 
-#define ADS1118Start    0x8000|FS_1|SigleShotMode|DR128SPS|MODEADC|PULLUPDISABLE|UpdateCR
+#define ADS1118Start    0x8000|FS_2|SigleShotMode|DR128SPS|MODEADC|PULLUPDISABLE|UpdateCR
 
 
 /* function declare */

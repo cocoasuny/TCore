@@ -48,20 +48,20 @@ void coreTemperatureTaskHandle(void *pvParameters)
 		
 	/* temperture event queue init */
 	temQueueMsgValue.eventID = EVENT_TEMPERATURE_DEFAULT;
-	gSubFunc_stat_set(REF_TEMPERATURE_MEASURE_STATUS | CORE_TEMPERATURE_MEASURE_STATUS,OFF);
+	gSubFunc_stat_set(TEMPERATURE_MEASURE_STATUS,OFF);
 	
 	while(1)
 	{
 		if(pdPASS == xQueueReceive(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime))
 		{
-			/* 接收到消息 */
-			#ifdef DEBUG_TEMPERATURE
-				printf("tem event:%d\r\n",temQueueMsgValue.eventID);
-			#endif
+			/* 接收到消息，对消息事件进行处理 */
 			switch(temQueueMsgValue.eventID)
 			{
 				case EVENT_START_REFTEM_MEASURE:
-				{					
+				{				
+                    #ifdef DEBUG_TEMPERATURE
+                        printf("start ref temperature\r\n");
+                    #endif
 					/* init ref temperature measure arithmetic */
 					
 					/* start the time for temperature measure freq */
@@ -69,32 +69,82 @@ void coreTemperatureTaskHandle(void *pvParameters)
 					{
 						xTimerDelete(temSampleTime,0);
 					}
-					temSampleTime = xTimerCreate("temTime",TEM_SAMPLE_PER,pdFALSE,(void *)0,temperature_sampleTimer_cb);
+					temSampleTime = xTimerCreate("temTime",TEM_SAMPLE_PER,pdTRUE,(void *)0,temperature_sampleTimer_cb);
 					xTimerStart(temSampleTime,0);
 					temperature_measure_mode_set(REFTEM_MEASURE_MODE);
 					
-					gSubFunc_stat_set(REF_TEMPERATURE_MEASURE_STATUS,ON);
+					gSubFunc_stat_set(TEMPERATURE_MEASURE_STATUS,ON);
 				}
 				break;
 				case EVENT_GET_REFTEM_RESULT:
 				{
-					if(gSubFunc_stat_get(REF_TEMPERATURE_MEASURE_STATUS) != OFF)
+                    #ifdef DEBUG_TEMPERATURE
+                        printf("get ref temperature\r\n");
+                    #endif                    
+					if(gSubFunc_stat_get(TEMPERATURE_MEASURE_STATUS) != OFF)
 					{
 						/* ref temperature sample */
 						Rt = 0;
 						ref_temperature_rt_sample(&Rt);
-						/* ref temperature measure */
-						ref_temperature_calculate(Rt,&g_refTemVal);
+//						/* ref temperature measure */
+//						ref_temperature_calculate(Rt,&g_refTemVal);
 					}
 				}
 				break;
 				case EVENT_STOP_REFTEM_MEASURE:
 				{
+                    #ifdef DEBUG_TEMPERATURE
+                        printf("stop ref temperature\r\n");
+                    #endif                    
 					xTimerDelete(temSampleTime,0);
 					temSampleTime = NULL;
-					gSubFunc_stat_set(REF_TEMPERATURE_MEASURE_STATUS,OFF);
+					gSubFunc_stat_set(TEMPERATURE_MEASURE_STATUS,OFF);
 				}
 				break;
+				case EVENT_START_CORETEM_MEASURE:
+				{				
+                    #ifdef DEBUG_TEMPERATURE
+                        printf("start core temperature\r\n");
+                    #endif
+					/* init ref temperature measure arithmetic */
+					
+					/* start the time for temperature measure freq */
+					if(temSampleTime != NULL)
+					{
+						xTimerDelete(temSampleTime,0);
+					}
+					temSampleTime = xTimerCreate("temTime",TEM_SAMPLE_PER,pdTRUE,(void *)0,temperature_sampleTimer_cb);
+					xTimerStart(temSampleTime,0);
+					temperature_measure_mode_set(CORETEM_MEASURE_MODE);
+					
+					gSubFunc_stat_set(TEMPERATURE_MEASURE_STATUS,ON);
+				}
+				break;
+				case EVENT_GET_CORETEM_RESULT:
+				{
+                    #ifdef DEBUG_TEMPERATURE
+                        printf("get core temperature\r\n");
+                    #endif                    
+					if(gSubFunc_stat_get(TEMPERATURE_MEASURE_STATUS) != OFF)
+					{
+						/* core temperature sample */
+
+
+						/* core temperature measure */
+
+					}
+				}
+				break;
+				case EVENT_STOP_CORETEM_MEASURE:
+				{
+                    #ifdef DEBUG_TEMPERATURE
+                        printf("stop core temperature\r\n");
+                    #endif                    
+					xTimerDelete(temSampleTime,0);
+					temSampleTime = NULL;
+					gSubFunc_stat_set(TEMPERATURE_MEASURE_STATUS,OFF);
+				}
+				break;                
 				default:break;
 			}
 		}
@@ -139,9 +189,8 @@ static void temperature_sampleTimer_cb(xTimerHandle pxTimer)
 	TEM_MEASURE_MODE_T      mode = CORETEM_MEASURE_MODE;
 	const TickType_t 		xMaxBlockTime = pdMS_TO_TICKS(100); /* 设置最大等待时间为 100ms */
 	
-	
 	pxTimer = pxTimer;
-	
+	    
 	portENTER_CRITICAL();
 	mode = temperature_measure_mode_get();
 	portEXIT_CRITICAL();
@@ -176,13 +225,13 @@ static void ref_temperature_rt_sample(uint32_t *Rt)
 	ref_temperature_init();
 	ref_temperature_sample(&Vsens12,&Vsens23);
 	#ifdef DEBUG_TEMPERATURE
-		printf("ADval12:%0.01f,23:%0.01f\r\n",Vsens12,Vsens23);
+		printf("ADval[12] :%0.01f,    ADval[23] :%0.01f\r\n",Vsens12,Vsens23);
 	#endif
 	
 	/* calculate the value of Rt */
 	*Rt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
 	#ifdef DEBUG_TEMPERATURE
-		printf("Rt:%dΩ\r\n",Rt);
+		printf("Rt:%dΩ\r\n",*Rt);
 	#endif
 	
 	/* deinit ref temperature measure hw source */	

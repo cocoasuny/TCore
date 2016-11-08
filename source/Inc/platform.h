@@ -51,7 +51,8 @@
 //#define Debug_Sensor_Temperature
 #define Debug_LedControl
 #define DEBUG_TEMPERATURE
-#define DEBUG_KEY_PRESS
+//#define DEBUG_KEY_PRESS
+#define DEBUG_USER_INTERFACE
 
 
 /* Shell Switch */
@@ -65,14 +66,18 @@
 
 
 /******** Task define ********************/
+//优先级值越大，优先级越高
 /* BlueNRG HCI Process Task */
 #define Task_BlueNRGHCI_Stack        500    //task stack
-#define Task_BlueNRGHCI_Priority     2      //task priority
+#define Task_BlueNRGHCI_Priority     5      //task priority
 
 /* core temperature task define */
 #define Task_CoreTemperature_Stack		500
 #define Task_CoreTemperature_Priority	3
 
+/* user interface task define */
+#define Task_userInterface_Stack        256
+#define Task_userInterface_Priority     2
 
 /* NVIC Priority define */
 #define PT_EXTI_KEY_PRE_PRIORITY			0x0A
@@ -91,7 +96,7 @@
 
 #define SYSCLK_FREQ 84000000
 /* define key Long press time */
-#define LONG_PRESS_TIME           pdMS_TO_TICKS(1000)    // ms,长按键检测时间
+#define LONG_PRESS_TIME           pdMS_TO_TICKS(2000)    // ms,长按键检测时间
 #define KEY_INVALIDE_TIME         pdMS_TO_TICKS(200)     // ms,按键响应间隔时间
 
 

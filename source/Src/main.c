@@ -39,6 +39,7 @@ volatile AxesRaw_t 					g_Axes_data = {0, 0, 0};
 uint16_t 							g_LedFlashTime = 500;
 uint8_t  							g_aRxBuffer[RXBUFFERSIZE] = {0};
 QueueHandle_t						coreTemEventQueue = NULL;  //event queue for core temperature
+QueueHandle_t                       userInterFaceEventQueue = NULL; //event queue for userInterface
 float								g_refTemVal = 0;   //参考温度结果值
 float								g_coreTemVal = 0;  //核心温度结果值
 
@@ -54,6 +55,7 @@ FIL  MyFile;     /* File object */
 xTaskHandle  xHandleLedCtl;
 xTaskHandle  xHandleBlueNRGHCI;
 xTaskHandle  xHandleCoreTemperature;
+xTaskHandle  xHandleUserInterface;
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -105,8 +107,12 @@ int main(void)
                 &xHandleBlueNRGHCI);        //任务句柄  
 
 	/* core temperature measure task */
-//	xTaskCreate(coreTemperatureTaskHandle,"Tcore",Task_CoreTemperature_Stack,NULL,
-//				Task_CoreTemperature_Priority,&xHandleCoreTemperature);
+	xTaskCreate(coreTemperatureTaskHandle,"Tcore",Task_CoreTemperature_Stack,NULL,
+				Task_CoreTemperature_Priority,&xHandleCoreTemperature);
+                
+    /* user interface task */
+    xTaskCreate(userInterfaceTaskHandle,"UI",Task_userInterface_Stack,NULL,
+                Task_userInterface_Priority,&xHandleUserInterface);
                 
     /* Start scheduler */
     vTaskStartScheduler();

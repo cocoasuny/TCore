@@ -61,10 +61,10 @@
 #include "core_temperature.h"
 #include "bsp_temperature.h"
 #include "alg_temperature.h"
+#include "userInterface.h"
 
 /* Define sub-function status */
-#define REF_TEMPERATURE_MEASURE_STATUS 			(1 << 0)
-#define CORE_TEMPERATURE_MEASURE_STATUS 		(1 << 1)
+#define TEMPERATURE_MEASURE_STATUS 			(1 << 0)
 
 extern volatile AxesRaw_t 					g_Axes_data;
 extern uint16_t 							g_LedFlashTime;
@@ -73,6 +73,7 @@ extern char 								SDPath[4];  /* SD logical drive path */
 extern FATFS 								SDFatFs;  /* File system object for SD card logical drive */
 extern FIL  								MyFile;     /* File object */
 extern QueueHandle_t						coreTemEventQueue;
+extern QueueHandle_t                        userInterFaceEventQueue; //event queue for userInterface
 extern float								g_refTemVal;
 extern float								g_coreTemVal;  //核心温度结果值
 
