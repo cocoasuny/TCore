@@ -128,12 +128,12 @@
 #define GPIO_PORT_LED_BLUE_CLK_ENABLE()			__GPIOA_CLK_ENABLE()
 #define GPIO_PORT_LED_BLUE						GPIOA
 #define GPIO_PIN_LED_BLUE						GPIO_PIN_9
-//#define GPIO_PORT_LED_1_CLK_ENABLE()			__GPIOB_CLK_ENABLE()
+//#define GPIO_PORT_LED_1_CLK_ENABLE()			__GPIOA_CLK_ENABLE()
 //#define GPIO_PORT_LED_1							GPIOA
-//#define GPIO_PIN_LED_1							GPIO_PIN_3
-//#define GPIO_PORT_LED_2_CLK_ENABLE()			__GPIOB_CLK_ENABLE()
+//#define GPIO_PIN_LED_1							GPIO_PIN_10
+//#define GPIO_PORT_LED_2_CLK_ENABLE()			__GPIOA_CLK_ENABLE()
 //#define GPIO_PORT_LED_2							GPIOA
-//#define GPIO_PIN_LED_2							GPIO_PIN_3
+//#define GPIO_PIN_LED_2							GPIO_PIN_9
 
 /* Definition for Key Pins */
 #define GPIO_PORT_KEY1_CLK_ENABLE()				__GPIOB_CLK_ENABLE()
