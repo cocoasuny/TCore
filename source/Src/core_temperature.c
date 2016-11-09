@@ -24,6 +24,7 @@ static TEM_MEASURE_MODE_T			temMeasureMode = CORETEM_MEASURE_MODE; //temperature
 /* private function declare */
 static void temperature_sampleTimer_cb(xTimerHandle pxTimer);
 static void ref_temperature_rt_sample(uint32_t *Rt);
+static void core_temperature_rt_sample(uint32_t *ambientRt,uint32_t *foreheadRt);
 
 /**
   * @brief  coreTemperatureTaskHandle
@@ -36,6 +37,8 @@ void coreTemperatureTaskHandle(void *pvParameters)
 	const TickType_t 		xMaxBlockTime = pdMS_TO_TICKS(300); /* 设置最大等待时间为 300ms */
 	TEM_MSG_T 				temQueueMsgValue;
 	uint32_t                Rt = 0;
+    uint32_t                ambientRt = 0;
+    uint32_t                foreheadRt = 0;
 	
 	/* creat event queue for core temperature */
 	coreTemEventQueue = xQueueCreate(CORE_TEMPERATURE_EVENT_QUEUE_SIZE,sizeof(TEM_MSG_T));
@@ -129,7 +132,7 @@ void coreTemperatureTaskHandle(void *pvParameters)
 					if(gSubFunc_stat_get(TEMPERATURE_MEASURE_STATUS) != OFF)
 					{
 						/* core temperature sample */
-
+                        core_temperature_rt_sample(&ambientRt,&foreheadRt);
 
 						/* core temperature measure */
 
@@ -237,6 +240,34 @@ static void ref_temperature_rt_sample(uint32_t *Rt)
 	
 	/* deinit ref temperature measure hw source */	
 	ref_temperature_deinit();
+}
+/**
+  * @brief  core_temperature_rt_sample
+  * @note   NTC阻值采集
+  * @param  *ambientRt,*foreheadRt(Ω)
+  * @retval None    
+  */
+static void core_temperature_rt_sample(uint32_t *ambientRt,uint32_t *foreheadRt)
+{
+    float Vsens12 = 0;
+	float Vsens23 = 0;
+    
+    /* init core temperature measure hw source */
+    core_temperature_hw_init();
+    
+    /* calculate the value of Rt */
+    core_ambient_temperature_sample(&Vsens12,&Vsens23);
+    *ambientRt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
+
+    core_forehead_temperature_sample(&Vsens12,&Vsens23);
+    *foreheadRt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
+
+    #ifdef DEBUG_TEMPERATURE
+        printf("ambientRt:%d,  foreheadRt:%d\r\n",*ambientRt,*foreheadRt);
+	#endif
+    
+    /* deinit core temperature measure hw source */	
+    core_temperature_hw_deinit();
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

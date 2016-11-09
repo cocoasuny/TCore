@@ -52,7 +52,7 @@ void ref_temperature_sample(float *VSens12,float *VSens23)
 	ads1118_getVal(ADS1118Start | DifferentialCH2_3, &V_sens);
 	*VSens12 = V_sens;
 
-	HAL_Delay(10);
+//	HAL_Delay(10);
     
 	/* switch the ref temperature chanel */
 	ref_temperature_channel_switch(ChannelA1B1);
@@ -165,13 +165,17 @@ void core_ambient_temperature_sample(float *VSens12,float *VSens23)
 	
 	/* switch the core temperature chanel */
 	core_temperature_channel_switch(ChannelA0B0);
-	ads1118_getVal(ADS1118Start | DifferentialCH2_3, &V_sens);
+	ads1118_getVal(ADS1118Start | DifferentialCH0_1, &V_sens);
 	*VSens12 = V_sens;
 	
+//    HAL_Delay(10);
+    
 	/* switch the core temperature chanel */
 	core_temperature_channel_switch(ChannelA1B1);
-	ads1118_getVal(ADS1118Start | DifferentialCH2_3, &V_sens);
+	ads1118_getVal(ADS1118Start | DifferentialCH0_1, &V_sens);
 	*VSens23 = V_sens;	
+    
+//    HAL_Delay(10);
 }
 /**
   * @brief  core_forehead_temperature_sample
@@ -184,14 +188,18 @@ void core_forehead_temperature_sample(float *VSens12,float *VSens23)
 	float V_sens = 0;
 	
 	/* switch the core temperature chanel */
-	core_temperature_channel_switch(ChannelA0B0);
-	ads1118_getVal(ADS1118Start | DifferentialCH2_3, &V_sens);
+	core_temperature_channel_switch(ChannelA2B2);
+	ads1118_getVal(ADS1118Start | DifferentialCH0_1, &V_sens);
 	*VSens12 = V_sens;
+    
+//    HAL_Delay(10);
 	
 	/* switch the core temperature chanel */
-	core_temperature_channel_switch(ChannelA1B1);
-	ads1118_getVal(ADS1118Start | DifferentialCH2_3, &V_sens);
+	core_temperature_channel_switch(ChannelA3B3);
+	ads1118_getVal(ADS1118Start | DifferentialCH0_1, &V_sens);
 	*VSens23 = V_sens;	
+    
+//    HAL_Delay(10);
 }
 /**
   * @brief  core_temperature_deinit
