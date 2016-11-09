@@ -190,6 +190,7 @@ TEM_MEASURE_MODE_T temperature_measure_mode_get(void)
 static void temperature_sampleTimer_cb(xTimerHandle pxTimer)
 {
 	TEM_MSG_T 				temQueueMsgValue;
+    USER_INTERFACE_MSG_T    UIQueueMsgValue;
 	TEM_MEASURE_MODE_T      mode = CORETEM_MEASURE_MODE;
 	const TickType_t 		xMaxBlockTime = pdMS_TO_TICKS(100); /* 设置最大等待时间为 100ms */
 	
@@ -203,11 +204,15 @@ static void temperature_sampleTimer_cb(xTimerHandle pxTimer)
 		case CORETEM_MEASURE_MODE:
 		{
 			temQueueMsgValue.eventID = EVENT_GET_CORETEM_RESULT;
+            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_GREEN_LED_TOGGLE;
+            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);            
 		}
 		break;
 		case REFTEM_MEASURE_MODE:
 		{
 			temQueueMsgValue.eventID = EVENT_GET_REFTEM_RESULT;
+            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_BLUE_LED_TOGGLE;
+            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);             
 		}
 		break;
 		default:break;

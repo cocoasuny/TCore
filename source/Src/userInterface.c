@@ -41,6 +41,22 @@ void userInterfaceTaskHandle(void *pvParameters)
 	/* user interface event queue init */
 	UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_DEFAULT;
         
+    /* LED init */
+    LEDx_Init(LED_RED);
+    LEDx_Init(LED_GREEN);
+    LEDx_Init(LED_BLUE);
+    if(temperature_measure_mode_get() == REFTEM_MEASURE_MODE)
+    {
+        LEDx_OFF(LED_GREEN);
+        LEDx_ON(LED_BLUE);
+    }
+    else if(temperature_measure_mode_get() == CORETEM_MEASURE_MODE)
+    {
+        LEDx_ON(LED_GREEN);
+        LEDx_OFF(LED_BLUE);        
+    }
+        
+        
     while(1)
     {
         if(pdPASS == xQueueReceive(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime))
@@ -57,13 +73,17 @@ void userInterfaceTaskHandle(void *pvParameters)
                         {
                             //停止参考温度测量
                             temQueueMsgValue.eventID = EVENT_STOP_REFTEM_MEASURE;
-                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime); 
+                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime);
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_BLUE_LED_ON;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);
                         }
                         else if(temperature_measure_mode_get() == CORETEM_MEASURE_MODE)
                         {
                             //停止核心温度测量
                             temQueueMsgValue.eventID = EVENT_STOP_CORETEM_MEASURE;
-                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime);                             
+                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime);
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_GREEN_LED_ON;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);
                         }
                     }
                     else  //测量处于停止状态,短按按键切换测量模式
@@ -72,11 +92,19 @@ void userInterfaceTaskHandle(void *pvParameters)
                         {
                             //切换为核心温度测量模式
                             temperature_measure_mode_set(CORETEM_MEASURE_MODE);
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_BLUE_LED_OFF;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);                               
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_GREEN_LED_ON;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);                            
                         }
                         else if(temperature_measure_mode_get() == CORETEM_MEASURE_MODE)
                         {
                             //切换为参考温度测量模式
                             temperature_measure_mode_set(REFTEM_MEASURE_MODE);
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_GREEN_LED_OFF;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);                               
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_BLUE_LED_ON;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);                            
                         }
                     }
                 }
@@ -106,17 +134,66 @@ void userInterfaceTaskHandle(void *pvParameters)
                         {
                             //停止参考温度测量
                             temQueueMsgValue.eventID = EVENT_STOP_REFTEM_MEASURE;
-                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime); 
+                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime);
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_BLUE_LED_ON;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);                            
                         }
                         else if(temperature_measure_mode_get() == CORETEM_MEASURE_MODE)
                         {
                             //停止核心温度测量
                             temQueueMsgValue.eventID = EVENT_STOP_CORETEM_MEASURE;
-                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime);                             
+                            xQueueSend(coreTemEventQueue,(void *)&temQueueMsgValue,xMaxBlockTime);
+                            UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_GREEN_LED_ON;
+                            xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime);                            
                         }
                     }                    
                 }
                 break;
+                case EVENT_USER_INTERFACE_RED_LED_ON:
+                {
+                    LEDx_ON(LED_RED);
+                }
+                break;
+                case EVENT_USER_INTERFACE_RED_LED_OFF:
+                {
+                    LEDx_OFF(LED_RED);
+                }
+                break;
+                case EVENT_USER_INTERFACE_RED_LED_TOGGLE:
+                {
+                    LEDx_Toggle(LED_RED);
+                }
+                break;
+                case EVENT_USER_INTERFACE_BLUE_LED_ON:
+                {
+                    LEDx_ON(LED_BLUE);
+                }
+                break;
+                case EVENT_USER_INTERFACE_BLUE_LED_OFF:
+                {
+                    LEDx_OFF(LED_BLUE);
+                }
+                break;
+                case EVENT_USER_INTERFACE_BLUE_LED_TOGGLE:
+                {
+                    LEDx_Toggle(LED_BLUE);
+                }
+                break;
+                case EVENT_USER_INTERFACE_GREEN_LED_ON:
+                {
+                    LEDx_ON(LED_GREEN);
+                }
+                break;
+                case EVENT_USER_INTERFACE_GREEN_LED_OFF:
+                {
+                    LEDx_OFF(LED_GREEN);
+                }
+                break;
+                case EVENT_USER_INTERFACE_GREEN_LED_TOGGLE:
+                {
+                    LEDx_Toggle(LED_GREEN);
+                }
+                break;                
                 default:break;
             }
             

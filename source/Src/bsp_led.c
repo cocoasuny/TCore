@@ -62,7 +62,8 @@ void LEDx_Init(LED_T ledcolour)
 			GPIO_InitStruct.Pull = GPIO_PULLUP;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 
-			HAL_GPIO_Init(GPIO_PORT_LED_RED, &GPIO_InitStruct);			
+			HAL_GPIO_Init(GPIO_PORT_LED_RED, &GPIO_InitStruct);
+            HAL_GPIO_WritePin(GPIO_PORT_LED_RED,GPIO_PIN_LED_RED,GPIO_PIN_SET);	
 		}
 		break;
 		case LED_GREEN: //green led config
@@ -76,7 +77,8 @@ void LEDx_Init(LED_T ledcolour)
 			GPIO_InitStruct.Pull = GPIO_PULLUP;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 
-			HAL_GPIO_Init(GPIO_PORT_LED_GREEN, &GPIO_InitStruct);				
+			HAL_GPIO_Init(GPIO_PORT_LED_GREEN, &GPIO_InitStruct);
+            HAL_GPIO_WritePin(GPIO_PORT_LED_GREEN,GPIO_PIN_LED_GREEN,GPIO_PIN_SET);
 		}
 		break;
 		case LED_BLUE:  //blue led config
@@ -90,7 +92,8 @@ void LEDx_Init(LED_T ledcolour)
 			GPIO_InitStruct.Pull = GPIO_PULLUP;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 
-			HAL_GPIO_Init(GPIO_PORT_LED_BLUE, &GPIO_InitStruct);				
+			HAL_GPIO_Init(GPIO_PORT_LED_BLUE, &GPIO_InitStruct);
+            HAL_GPIO_WritePin(GPIO_PORT_LED_BLUE,GPIO_PIN_LED_BLUE,GPIO_PIN_SET); 
 		}
 		break;
 //		case LED_1:    //led1 config
@@ -146,7 +149,7 @@ void LEDx_DeInit(LED_T ledcolour)
 			GPIO_InitStruct.Pull = GPIO_NOPULL;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 
-			HAL_GPIO_Init(GPIO_PORT_LED_RED, &GPIO_InitStruct);			
+			HAL_GPIO_Init(GPIO_PORT_LED_RED, &GPIO_InitStruct);		
 		}
 		break;
 		case LED_GREEN: //green led config
@@ -160,7 +163,7 @@ void LEDx_DeInit(LED_T ledcolour)
 			GPIO_InitStruct.Pull = GPIO_NOPULL;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 
-			HAL_GPIO_Init(GPIO_PORT_LED_GREEN, &GPIO_InitStruct);				
+			HAL_GPIO_Init(GPIO_PORT_LED_GREEN, &GPIO_InitStruct);           
 		}
 		break;
 		case LED_BLUE:  //blue led config
@@ -174,7 +177,7 @@ void LEDx_DeInit(LED_T ledcolour)
 			GPIO_InitStruct.Pull = GPIO_NOPULL;
 			GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
 
-			HAL_GPIO_Init(GPIO_PORT_LED_BLUE, &GPIO_InitStruct);				
+			HAL_GPIO_Init(GPIO_PORT_LED_BLUE, &GPIO_InitStruct);
 		}
 		break;
 //		case LED_1:    //led1 config
