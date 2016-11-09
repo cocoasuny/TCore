@@ -273,13 +273,15 @@ static void Read_Request_CB(uint16_t handle)
 //		}
 		if(gSubFunc_stat_get(TEMPERATURE_MEASURE_STATUS) != OFF)
 		{
-			fTmp = g_refTemVal;
+			fTmp = g_TemVal;
 			data = (uint16_t)(fTmp*10);
 			Temp_Update(data);			
 		}
 		else
 		{
 			BSP_HUM_TEMP_GetTemperature(&fTmp);
+			data = 0;
+			Temp_Update(data);	//发送0控制App在未开启测量状态下的显示
 		}
     }
     else if(handle == pressCharHandle + 1)

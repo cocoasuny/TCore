@@ -131,11 +131,8 @@ void Key1_EXTI_Handle(void)
 			{
 				keyPressDectetCtl = false; //下次检测上升沿
 				xResult = xTimerStopFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
-				if(xResult != pdFAIL)
-				{
-					portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-				}					
-				xResult = xTimerStartFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
+				/* change period函数会自动开启timer */	
+				xResult = xTimerChangePeriodFromISR(s_Key1Timer,LONG_PRESS_TIME,&xHigherPriorityTaskWoken);
 				pressDownTick = HAL_GetTick();
 				if(xResult != pdFAIL)
 				{
@@ -157,22 +154,18 @@ void Key1_EXTI_Handle(void)
                     UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_SHORT_PRESS;
                     xQueueSendFromISR(userInterFaceEventQueue,(void *)&UIQueueMsgValue,&xHigherPriorityTaskWoken);
 					s_KeyPressStatus = INVALIDE;
-                    if( xHigherPriorityTaskWoken )
-                    {
-                        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-                    }
+//                    if( xHigherPriorityTaskWoken )
+//                    {
+//                        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+//                    }
 					
 					xResult = xTimerStopFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
 					if(xResult != pdFAIL)
 					{
 						portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-					}					
+					}			
+					/* change period函数会自动开启timer */	
 					xResult = xTimerChangePeriodFromISR(s_Key1Timer,KEY_INVALIDE_TIME,&xHigherPriorityTaskWoken);
-					if(xResult != pdFAIL)
-					{
-						portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-					}
-					xResult = xTimerStartFromISR(s_Key1Timer,&xHigherPriorityTaskWoken);
 					if(xResult != pdFAIL)
 					{
 						portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
@@ -216,6 +209,7 @@ static void key_press_time_cb(xTimerHandle pxTimer)
         UIQueueMsgValue.eventID = EVENT_USER_INTERFACE_LONG_PRESS;
         xQueueSend(userInterFaceEventQueue,(void *)&UIQueueMsgValue,xMaxBlockTime); 
         
+		/* change period函数会自动开启timer */
 		xTimerChangePeriod(s_Key1Timer,KEY_INVALIDE_TIME,pdMS_TO_TICKS(100));
 	}
 	else

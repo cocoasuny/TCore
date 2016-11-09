@@ -89,9 +89,9 @@ void coreTemperatureTaskHandle(void *pvParameters)
 						/* ref temperature sample */
 						Rt = 0;
 						ref_temperature_rt_sample(&Rt);
-						/* ref temperature measure */
-						ref_temperature_calculate(Rt,&g_refTemVal);
-                        printf("ref tem val:%0.1f\r\n",g_refTemVal);
+						/* ref temperature measure and update the value */
+						ref_temperature_calculate(Rt,&g_TemVal);
+                        printf("ref tem val:%0.1f\r\n",g_TemVal);
 					}
 				}
 				break;
@@ -134,8 +134,7 @@ void coreTemperatureTaskHandle(void *pvParameters)
 						/* core temperature sample */
                         core_temperature_rt_sample(&ambientRt,&foreheadRt);
 
-						/* core temperature measure */
-
+						/* core temperature measure and update the value */
 					}
 				}
 				break;
@@ -152,12 +151,6 @@ void coreTemperatureTaskHandle(void *pvParameters)
 				default:break;
 			}
 		}
-		
-		/* core temperature sample */
-		
-		/* core temperature measure */
-		
-		/* update the value */
 	}
 }
 /**
@@ -234,13 +227,13 @@ static void ref_temperature_rt_sample(uint32_t *Rt)
 	ref_temperature_init();
 	ref_temperature_sample(&Vsens12,&Vsens23);
 	#ifdef DEBUG_TEMPERATURE
-		printf("ADval[12] :%0.01f,    ADval[23] :%0.01f\r\n",Vsens12,Vsens23);
+//		printf("ADval[12] :%0.01f,    ADval[23] :%0.01f\r\n",Vsens12,Vsens23);
 	#endif
 	
 	/* calculate the value of Rt */
 	*Rt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
 	#ifdef DEBUG_TEMPERATURE
-		printf("Rt:%d\r\n",*Rt);
+		printf("ref Rt:%d\r\n",*Rt);
 	#endif
 	
 	/* deinit ref temperature measure hw source */	

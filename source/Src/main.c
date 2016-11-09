@@ -40,7 +40,7 @@ uint16_t 							g_LedFlashTime = 500;
 uint8_t  							g_aRxBuffer[RXBUFFERSIZE] = {0};
 QueueHandle_t						coreTemEventQueue = NULL;  //event queue for core temperature
 QueueHandle_t                       userInterFaceEventQueue = NULL; //event queue for userInterface
-float								g_refTemVal = 0;   //参考温度结果值
+float								g_TemVal = 0;   //参考温度结果值
 float								g_coreTemVal = 0;  //核心温度结果值
 
 /* Private variables ---------------------------------------------------------*/

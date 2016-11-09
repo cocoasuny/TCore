@@ -74,7 +74,7 @@ extern FATFS 								SDFatFs;  /* File system object for SD card logical drive *
 extern FIL  								MyFile;     /* File object */
 extern QueueHandle_t						coreTemEventQueue;
 extern QueueHandle_t                        userInterFaceEventQueue; //event queue for userInterface
-extern float								g_refTemVal;
+extern float								g_TemVal;
 extern float								g_coreTemVal;  //核心温度结果值
 
 void MX_GPIO_Init(void);
