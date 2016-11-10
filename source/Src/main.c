@@ -52,7 +52,7 @@ FATFS SDFatFs;  /* File system object for SD card logical drive */
 FIL  MyFile;     /* File object */
 
 /* Private variables ---------------------------------------------------------*/
-xTaskHandle  xHandleLedCtl;
+xTaskHandle  xHandleSysCtl;
 xTaskHandle  xHandleBlueNRGHCI;
 xTaskHandle  xHandleCoreTemperature;
 xTaskHandle  xHandleUserInterface;
@@ -60,7 +60,6 @@ xTaskHandle  xHandleUserInterface;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void LedCtlTask(void *pvParameters);
 
 /*******************************************************************************
 * Function Name  : main函数
@@ -88,14 +87,9 @@ int main(void)
     /* Create the Tasks */
 	key_time_init();
 	
-    /* Led Control Task */
-    xTaskCreate(
-                LedCtlTask,                 //任务函数
-				"LedCtl",                   //任务名称
-                500,                        //stack大小，单位word
-                NULL,                       //任务参数
-                1,                          //任务优先级
-                &xHandleLedCtl);            //任务句柄
+    /* system Control Task */
+    xTaskCreate(sysControlTask,"SYSCtl",Task_SysControl_Stack,NULL,
+                Task_SysControl_Priority,&xHandleSysCtl);
                 
     /* BlueNRG HCI Task */
     xTaskCreate(
@@ -132,38 +126,6 @@ int main(void)
 
 }
 
-/*******************************************************************************
-* Function Name  : LedCtlTask
-* Description    : 控制LED
-* Input          : pvParameters，创建任务时传入参数
-* Output         : None
-* Return         : None
-*******************************************************************************/
-void LedCtlTask(void *pvParameters)
-{
-	Axes_TypeDef Axes;
-	
-    BSP_LED_Init();     //Led GPIO Init
-    
-    while(1)
-    {
-#ifdef SHELL_ENABLE			
-		Shell_ProcessorHandler();     //Shell处理函数
-#endif			
-        BSP_LED_Toggle();
-//        LEDx_Toggle(LED_RED);
-		
-		memset(&Axes,0,sizeof(Axes));
-		BSP_IMU_6AXES_X_GetAxes(&Axes);
-        
-        /* for test */
-        g_Axes_data.AXIS_X = Axes.AXIS_X;
-        g_Axes_data.AXIS_Y = Axes.AXIS_Y;
-        g_Axes_data.AXIS_Z = Axes.AXIS_Z;
-        BlueNRG_Update_Acc((AxesRaw_t*)&g_Axes_data);
-        vTaskDelay(g_LedFlashTime);     //控制LDE闪烁频率
-    }
-}
 /**
   * @brief  gSubFunc_stat_set
   * @note   设置测量状态

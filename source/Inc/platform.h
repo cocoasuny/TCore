@@ -79,6 +79,11 @@
 #define Task_userInterface_Stack        256
 #define Task_userInterface_Priority     2
 
+/* system control task define */
+#define Task_SysControl_Stack           256
+#define Task_SysControl_Priority        7
+
+
 /* NVIC Priority define */
 #define PT_EXTI_KEY_PRE_PRIORITY			0x0A
 #define PT_EXTI_KEY_SUB_PRIORITY			0
@@ -273,6 +278,24 @@
 
 //EXTI External Interrupt for user button
 #define PUSH_BUTTON_EXTI_IRQHandler EXTI15_10_IRQHandler
+
+
+/* definition for battery detect ADC resources*/
+#define ADC_BAT_DETECT                              ADC1
+#define ADC_BAT_DETECT_CLK_ENABLE()                 __HAL_RCC_ADC1_CLK_ENABLE()
+#define ADC_BAT_DETECT_CHANNEL_GPIO_CLK_ENABLE()    __HAL_RCC_GPIOC_CLK_ENABLE()
+
+#define ADC_BAT_DETECT_FORCE_RESET()                __HAL_RCC_ADC_FORCE_RESET()
+#define ADC_BAT_DETECT_RELEASE_RESET()              __HAL_RCC_ADC_RELEASE_RESET()
+
+/* Definition for ADCx Channel Pin */
+#define ADC_BAT_DETECT_CHANNEL_PIN                  GPIO_PIN_5
+#define ADC_BAT_DETECT_CHANNEL_GPIO_PORT            GPIOC
+
+/* Definition for ADCx's Channel */
+#define ADC_BAT_DETECT_CHANNEL                      ADC_CHANNEL_15
+#define SAMPLINGTIME                                ADC_SAMPLETIME_3CYCLES
+
 
 #endif /* __PLATFORM_H_ */
 

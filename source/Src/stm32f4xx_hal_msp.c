@@ -34,6 +34,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "bsp_driver_sd.h"
+#include "platform.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -257,6 +258,52 @@ void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)
   HAL_PWR_DisableBkUpAccess();
   __HAL_RCC_PWR_CLK_DISABLE();
   
+}
+
+/**
+  * @brief ADC MSP Initialization
+  *        This function configures the hardware resources used in this example:
+  *           - Peripheral's clock enable
+  *           - Peripheral's GPIO Configuration
+  * @param hadc: ADC handle pointer
+  * @retval None
+  */
+void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
+{
+  GPIO_InitTypeDef          GPIO_InitStruct;
+
+  /*##-1- Enable peripherals and GPIO Clocks #################################*/
+  /* ADC Periph clock enable */
+  ADC_BAT_DETECT_CLK_ENABLE();
+  /* Enable GPIO clock ****************************************/
+  ADC_BAT_DETECT_CHANNEL_GPIO_CLK_ENABLE();
+
+  /*##-2- Configure peripheral GPIO ##########################################*/
+  /* ADC Channel GPIO pin configuration */
+  GPIO_InitStruct.Pin = ADC_BAT_DETECT_CHANNEL_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ADC_BAT_DETECT_CHANNEL_GPIO_PORT, &GPIO_InitStruct);
+}
+
+/**
+  * @brief ADC MSP De-Initialization
+  *        This function frees the hardware resources used in this example:
+  *          - Disable the Peripheral's clock
+  *          - Revert GPIO to their default state
+  * @param hadc: ADC handle pointer
+  * @retval None
+  */
+void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
+{
+
+  /*##-1- Reset peripherals ##################################################*/
+  ADC_BAT_DETECT_FORCE_RESET();
+  ADC_BAT_DETECT_RELEASE_RESET();
+
+  /*##-2- Disable peripherals and GPIO Clocks ################################*/
+  /* De-initialize the ADC Channel GPIO pin */
+  HAL_GPIO_DeInit(ADC_BAT_DETECT_CHANNEL_GPIO_PORT, ADC_BAT_DETECT_CHANNEL_PIN);
 }
 
 /* USER CODE BEGIN 1 */

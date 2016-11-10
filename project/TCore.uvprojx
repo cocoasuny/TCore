@@ -518,6 +518,11 @@
               <FileType>1</FileType>
               <FilePath>..\source\Src\userInterface.c</FilePath>
             </File>
+            <File>
+              <FileName>system_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\Src\system_control.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -572,6 +577,11 @@
               <FileName>bsp_temperature.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\Src\bsp_temperature.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_battery_detect.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\Src\bsp_battery_detect.c</FilePath>
             </File>
           </Files>
         </Group>

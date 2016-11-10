@@ -62,6 +62,8 @@
 #include "bsp_temperature.h"
 #include "alg_temperature.h"
 #include "userInterface.h"
+#include "bsp_battery_detect.h"
+#include "system_control.h"
 
 /* Define sub-function status */
 #define TEMPERATURE_MEASURE_STATUS 			(1 << 0)
