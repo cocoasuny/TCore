@@ -24,7 +24,7 @@ static TEM_MEASURE_MODE_T			temMeasureMode = CORETEM_MEASURE_MODE; //temperature
 /* private function declare */
 static void temperature_sampleTimer_cb(xTimerHandle pxTimer);
 static void ref_temperature_rt_sample(uint32_t *Rt);
-static void core_temperature_rt_sample(uint32_t *ambientRt,uint32_t *foreheadRt);
+static void core_temperature_rt_sample(uint32_t *TH2Rt,uint32_t *TH1Rt);
 
 /**
   * @brief  coreTemperatureTaskHandle
@@ -37,8 +37,10 @@ void coreTemperatureTaskHandle(void *pvParameters)
 	const TickType_t 		xMaxBlockTime = pdMS_TO_TICKS(300); /* 设置最大等待时间为 300ms */
 	TEM_MSG_T 				temQueueMsgValue;
 	uint32_t                Rt = 0;
-    uint32_t                ambientRt = 0;
-    uint32_t                foreheadRt = 0;
+    uint32_t                TH2Rt = 0;
+    uint32_t                TH1Rt = 0;
+	float					TH2 = 0;
+	float					TH1 = 0;
 	
 	/* creat event queue for core temperature */
 	coreTemEventQueue = xQueueCreate(CORE_TEMPERATURE_EVENT_QUEUE_SIZE,sizeof(TEM_MSG_T));
@@ -90,7 +92,7 @@ void coreTemperatureTaskHandle(void *pvParameters)
 						Rt = 0;
 						ref_temperature_rt_sample(&Rt);
 						/* ref temperature measure and update the value */
-						ref_temperature_calculate(Rt,&g_TemVal);
+						ntc_temperature_calculate(Rt,&g_TemVal);
                         printf("ref tem val:%0.1f\r\n",g_TemVal);
 					}
 				}
@@ -132,9 +134,13 @@ void coreTemperatureTaskHandle(void *pvParameters)
 					if(gSubFunc_stat_get(TEMPERATURE_MEASURE_STATUS) != OFF)
 					{
 						/* core temperature sample */
-                        core_temperature_rt_sample(&ambientRt,&foreheadRt);
+                        core_temperature_rt_sample(&TH2Rt,&TH1Rt);
 
 						/* core temperature measure and update the value */
+						ntc_temperature_calculate(TH2Rt,&TH2);
+						ntc_temperature_calculate(TH1Rt,&TH1);
+						
+						//@todo............
 					}
 				}
 				break;
@@ -242,10 +248,10 @@ static void ref_temperature_rt_sample(uint32_t *Rt)
 /**
   * @brief  core_temperature_rt_sample
   * @note   NTC阻值采集
-  * @param  *ambientRt,*foreheadRt(Ω)
+  * @param  *TH2Rt,*TH1Rt(Ω)
   * @retval None    
   */
-static void core_temperature_rt_sample(uint32_t *ambientRt,uint32_t *foreheadRt)
+static void core_temperature_rt_sample(uint32_t *TH2Rt,uint32_t *TH1Rt)
 {
     float Vsens12 = 0;
 	float Vsens23 = 0;
@@ -254,14 +260,14 @@ static void core_temperature_rt_sample(uint32_t *ambientRt,uint32_t *foreheadRt)
     core_temperature_hw_init();
     
     /* calculate the value of Rt */
-    core_ambient_temperature_sample(&Vsens12,&Vsens23);
-    *ambientRt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
+    core_TH2_temperature_sample(&Vsens12,&Vsens23);
+    *TH2Rt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
 
-    core_forehead_temperature_sample(&Vsens12,&Vsens23);
-    *foreheadRt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
+    core_TH1_temperature_sample(&Vsens12,&Vsens23);
+    *TH1Rt = (uint32_t)(Vsens12 / (Vsens23/R_CAL));
 
     #ifdef DEBUG_TEMPERATURE
-        printf("ambientRt:%d,  foreheadRt:%d\r\n",*ambientRt,*foreheadRt);
+        printf("TH2Rt:%d,  TH1Rt:%d\r\n",*TH2Rt,*TH1Rt);
 	#endif
     
     /* deinit core temperature measure hw source */	

@@ -108,12 +108,16 @@ HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, float * pVsens)
 	{
 		App_Error_Check(HAL_ERROR);
 	}
-		
-
-//	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.03125);//FS1 = FS/32768
-//	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.015625);//FS05 = FS/32768
-//	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.0078125);//FS02= FS/32768
+	
+#if FULL_SCALE_02
+	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.0078125);//FS02= FS/32768
+#elif FULL_SCALE_05
+	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.015625);//FS05 = FS/32768
+#elif FULL_SCALE_1
+	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.03125);//FS1 = FS/32768
+#elif FULL_SCALE_2
 	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.0625);//FS2 = FS/32768
+#endif	
     	
 	return(ret); 
 }

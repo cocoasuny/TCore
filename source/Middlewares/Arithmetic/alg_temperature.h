@@ -26,7 +26,7 @@
 
 
 /* function declare */
-void ref_temperature_calculate(uint32_t Rt,float *tVal);
+void ntc_temperature_calculate(uint32_t Rt,float *tVal);
 
 #endif /* __ALG_TEMPERATURE_H */
 

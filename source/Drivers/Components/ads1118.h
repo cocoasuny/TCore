@@ -22,6 +22,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+
 /*************ADS1118 Control Register Define**************************************/
 ////Single-end Channel define
 #define SingleEndCH0    		0x4000
@@ -69,7 +70,15 @@
 #define NOP              0x0000
 #define UpdateCR         0x0002
 
-#define ADS1118Start    0x8000|FS_2|SigleShotMode|DR128SPS|MODEADC|PULLUPDISABLE|UpdateCR
+#if FULL_SCALE_02
+	#define ADS1118Start    0x8000|FS_02|SigleShotMode|DR128SPS|MODEADC|PULLUPDISABLE|UpdateCR
+#elif FULL_SCALE_05
+	#define ADS1118Start    0x8000|FS_05|SigleShotMode|DR128SPS|MODEADC|PULLUPDISABLE|UpdateCR
+#elif FULL_SCALE_1
+	#define ADS1118Start    0x8000|FS_1|SigleShotMode|DR128SPS|MODEADC|PULLUPDISABLE|UpdateCR
+#elif FULL_SCALE_2
+	#define ADS1118Start    0x8000|FS_2|SigleShotMode|DR128SPS|MODEADC|PULLUPDISABLE|UpdateCR
+#endif
 
 
 /* function declare */

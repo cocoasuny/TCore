@@ -38,8 +38,8 @@ void ref_temperature_init(void);
 void ref_temperature_sample(float *VSens12,float *VSens23);
 void ref_temperature_deinit(void);
 void core_temperature_hw_init(void);
-void core_ambient_temperature_sample(float *VSens12,float *VSens23);
-void core_forehead_temperature_sample(float *VSens12,float *VSens23);
+void core_TH2_temperature_sample(float *VSens12,float *VSens23);
+void core_TH1_temperature_sample(float *VSens12,float *VSens23);
 void core_temperature_hw_deinit(void);
 
 

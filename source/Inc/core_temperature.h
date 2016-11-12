@@ -26,7 +26,15 @@
 /* definitions */
 #define CORE_TEMPERATURE_EVENT_QUEUE_SIZE			(10)
 #define TEM_SAMPLE_PER								pdMS_TO_TICKS(1000) //ms
+
+/* calculate register define */
 #define R_CAL										(4700) //Ω
+/* ADS1118 full scale user define */
+//#define FULL_SCALE_02
+//#define FULL_SCALE_05
+//#define FULL_SCALE_1
+#define FULL_SCALE_2  true
+	
 
 /* type struct define */
 typedef enum

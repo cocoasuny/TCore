@@ -154,12 +154,12 @@ void core_temperature_hw_init(void)
 	ads1118_init();	
 }
 /**
-  * @brief  core_ambient_temperature_sample
-  * @brief  获取核心环境温度AD采样电压值
+  * @brief  core_TH2_temperature_sample
+  * @brief  获取核心TH2温度AD采样电压值
   * @param[out]  VSens12, VSens23
   * @retval None    
   */
-void core_ambient_temperature_sample(float *VSens12,float *VSens23)
+void core_TH2_temperature_sample(float *VSens12,float *VSens23)
 {
 	float V_sens = 0;
 	
@@ -178,12 +178,12 @@ void core_ambient_temperature_sample(float *VSens12,float *VSens23)
 //    HAL_Delay(10);
 }
 /**
-  * @brief  core_forehead_temperature_sample
-  * @brief  获取核心额头温度AD采样电压值
+  * @brief  core_TH1_temperature_sample
+  * @brief  获取核心TH1温度AD采样电压值
   * @param  VSens12, VSens23
   * @retval None    
   */
-void core_forehead_temperature_sample(float *VSens12,float *VSens23)
+void core_TH1_temperature_sample(float *VSens12,float *VSens23)
 {
 	float V_sens = 0;
 	

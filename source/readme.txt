@@ -35,8 +35,13 @@
 			核心温度测量模式下短按按键切换至参考温度测量模式。
 	c.	温度测量运行中：
 		1):	长/短按按键均停止温度测量。
-			
-	
+		
+ 4、核心温度测量相关定义:
+	双探头式核心温度测量模型参见文档《A non-invasive device to continuously determine 
+	heat strain in humans》Figure2 in page4.参数定义如下：
+	a.	TH1: skin temperature.
+	b.	TH2: temperature of the Double Sensor on the side facing away from the skin.
+	对应原理图上，P9,1/2引脚为TH1；3/4引脚为TH2。
 	
 	
 	
