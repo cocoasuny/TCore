@@ -97,8 +97,24 @@ void ntc_temperature_calculate(uint32_t Rt,float *tVal)
 	}
 	*tVal = Tamb;	
 }
-
-
+/**
+  * @brief  core_temperature_calculate
+  * @note   通过TH1、TH2计算core temperature
+	/***********************  core temperature calculate formula ************************************************/
+	/*                                                                                                          */
+	/*				 Ks				  Kiso Aiso_m	TH1+TH2		aTH2 - Ks(TH1-TH2) + Kiso((TH1+TH2)/2)          */
+	/* Tcore = TH1 + --*(TH1 - TH2) + ----*------*(--------- - --------------------------------------- )        */
+	/*               Kg                Kg    As        2                       a + Kiso                         */ 
+	/*                                                                                                          */
+	/************************************************************************************************************ 	
+  * @param[in]  Th1,Th2
+  * @param[out] *coreTem
+  * @retval None    
+  */
+void core_temperature_calculate(float Th1,float Th2, float *coreTem)
+{
+	
+}
 
 
 

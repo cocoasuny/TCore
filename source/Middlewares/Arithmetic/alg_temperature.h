@@ -23,10 +23,17 @@
 
 #define NTC_LUT_LEN  (160)   //25.0~40.9℃
 
-
+/***********************  core temperature calculate formula ************************************************/
+/*                                                                                                          */
+/*				 Ks				  Kiso Aiso_m	TH1+TH2		aTH2 - Ks(TH1-TH2) + Kiso((TH1+TH2)/2)          */
+/* Tcore = TH1 + --*(TH1 - TH2) + ----*------*(--------- - --------------------------------------- )        */
+/*               Kg                Kg    As        2                       a + Kiso                         */ 
+/*                                                                                                          */
+/************************************************************************************************************/                                                                                                        
 
 /* function declare */
 void ntc_temperature_calculate(uint32_t Rt,float *tVal);
+void core_temperature_calculate(float Th1,float Th2, float *coreTem);
 
 #endif /* __ALG_TEMPERATURE_H */
 
