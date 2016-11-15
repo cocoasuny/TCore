@@ -114,7 +114,8 @@ void coreTemperatureTaskHandle(void *pvParameters)
                     #ifdef DEBUG_TEMPERATURE
                         printf("start core temperature\r\n");
                     #endif
-					/* init ref temperature measure arithmetic */
+					/* init core temperature measure arithmetic */
+					alg_core_temperature_calculate_init();
 					
 					/* start the time for temperature measure freq */
 					if(temSampleTime != NULL)

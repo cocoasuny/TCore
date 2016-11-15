@@ -16,6 +16,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "alg_temperature.h"
 
+
+/* private variables declare */
+static float alg_coreTemperature_param1 = 0.0f;
+static float alg_coreTemperature_param2 = 0.0f;
+static float alg_coreTemperature_param3 = 0.0f;
+static float alg_coreTemperature_param4 = 0.0f;
+static float alg_coreTemperature_param5 = 0.0f;
+
+
 const uint32_t Rt_ref[NTC_LUT_LEN] = 
 {
 	2252,2243,2234,2225,2216,2206,2196,2186,2176,2166, //25.0~25.9
@@ -83,24 +92,43 @@ void ntc_temperature_calculate(uint32_t Rt,float *tVal)
 	{
 		Tamb = Tempurature[NTC_LUT_LEN - 1];
 	}
+	else if(num == 0)
+	{
+		Tamb = Tempurature[0];
+	}
 	else
 	{
-		Mid = (Rt_ref[num] - Rt_ref[num+1])/2;
+		Mid = (Rt_ref[num] - Rt_ref[num-1])/2;
 		if((Rt-Rt_ref[num]) <= Mid)
 		{
-			Tamb = Tempurature[num];
+			Tamb = Tempurature[num-1];
 		}
 		else
 		{
-			Tamb = Tempurature[num+1];
+			Tamb = Tempurature[num];
 		}
 	}
 	*tVal = Tamb;	
 }
 /**
+  * @brief  alg_core_temperature_calculate_init
+  * @note   核心温度算法初始化：将核心温度计算公式化简之后使用的参数计算
+  * @param  None
+  * @retval None    
+  */
+void alg_core_temperature_calculate_init(void)
+{
+	alg_coreTemperature_param1 = (float)(Ks / Kg);
+	alg_coreTemperature_param2 = (float)((Kiso*Aiso_m)/(Kg*As));
+	alg_coreTemperature_param3 = (float)(alg_coreTemperature_param2*alpha/(alpha+Kiso));
+	alg_coreTemperature_param4 = (float)(alg_coreTemperature_param2*Ks/(alpha+Kiso));
+	alg_coreTemperature_param5 = (float)(alg_coreTemperature_param2*Kiso/(2*(alpha+Kiso)));
+}
+
+/**
   * @brief  core_temperature_calculate
   * @note   通过TH1、TH2计算core temperature
-	/***********************  core temperature calculate formula ************************************************/
+*/	/***********************  core temperature calculate formula ************************************************/
 	/*                                                                                                          */
 	/*				 Ks				  Kiso Aiso_m	TH1+TH2		aTH2 - Ks(TH1-TH2) + Kiso((TH1+TH2)/2)          */
 	/* Tcore = TH1 + --*(TH1 - TH2) + ----*------*(--------- - --------------------------------------- )        */
@@ -113,7 +141,16 @@ void ntc_temperature_calculate(uint32_t Rt,float *tVal)
   */
 void core_temperature_calculate(float Th1,float Th2, float *coreTem)
 {
-	
+	if(Th1 >= Th2)
+	{
+		*coreTem = Th1 + alg_coreTemperature_param1*(Th1-Th2) + alg_coreTemperature_param2*(Th1+Th2)/2 \
+					   - alg_coreTemperature_param3*Th2 + alg_coreTemperature_param4*(Th1-Th2) \
+					   - alg_coreTemperature_param5*(Th1+Th2);
+	}
+	else //采集错误
+	{
+		*coreTem = 0;
+	}
 }
 
 
