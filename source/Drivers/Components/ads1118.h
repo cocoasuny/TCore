@@ -81,6 +81,8 @@
 #endif
 
 
+#define ADC_AVARAGE_TIMES	10
+
 /* function declare */
 HAL_StatusTypeDef ads1118_init(void);
 HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, float * pVsens);

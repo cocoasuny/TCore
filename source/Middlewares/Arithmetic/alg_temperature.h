@@ -21,6 +21,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
+/* kind of NTC define */
+typedef enum
+{
+	NTC_2K = 0,
+	NTC_10K
+}NTC_TYPE_T;
+
 #define NTC_LUT_LEN  (160)   //25.0~40.9℃
 
 /* core temperature parameters define */
@@ -42,7 +49,7 @@
 /************************************************************************************************************/                                                                                                        
 
 /* function declare */
-void ntc_temperature_calculate(uint32_t Rt,float *tVal);
+void ntc_temperature_calculate(uint32_t Rt,float *tVal,NTC_TYPE_T ntctype);
 void alg_core_temperature_calculate_init(void);
 void core_temperature_calculate(float Th1,float Th2, float *coreTem);
 

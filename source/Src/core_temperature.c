@@ -92,7 +92,7 @@ void coreTemperatureTaskHandle(void *pvParameters)
 						Rt = 0;
 						ref_temperature_rt_sample(&Rt);
 						/* ref temperature measure and update the value */
-						ntc_temperature_calculate(Rt,&g_TemVal);
+						ntc_temperature_calculate(Rt,&g_TemVal,NTC_2K);
 						#ifdef DEBUG_TEMPERATURE
 							printf("ref tem val:%0.1f\r\n",g_TemVal);
 						#endif
@@ -140,8 +140,8 @@ void coreTemperatureTaskHandle(void *pvParameters)
                         core_temperature_rt_sample(&TH2Rt,&TH1Rt);
 
 						/* core temperature measure and update the value */
-						ntc_temperature_calculate(TH2Rt,&TH2);
-						ntc_temperature_calculate(TH1Rt,&TH1);
+						ntc_temperature_calculate(TH2Rt,&TH2,NTC_10K);
+						ntc_temperature_calculate(TH1Rt,&TH1,NTC_10K);
 						
 						/* calculate the core temperature through TH1,TH2 */
 						core_temperature_calculate(TH1,TH2,&g_TemVal);

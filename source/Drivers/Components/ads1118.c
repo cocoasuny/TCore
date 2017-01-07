@@ -83,6 +83,8 @@ HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, float * pVsens)
 	HAL_StatusTypeDef			ret = HAL_ERROR;
 	uint8_t						aTxBuffer[2] = {0};
 	uint8_t						aRxBuffer[2] = {0};
+	uint8_t						i=0;
+	uint32_t					adc_sum=0;
 
 	CMD_H = (uint8_t)(0x00FF & (CMD >> 8));
 	CMD_L = (uint8_t)(0x00FF & CMD);
@@ -90,34 +92,38 @@ HAL_StatusTypeDef ads1118_getVal(uint16_t CMD, float * pVsens)
 	aTxBuffer[0] = CMD_H;
     aTxBuffer[1] = CMD_L;
     
-	HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_RESET);
-	ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 2, 5000); 
-
-    HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_SET);
-    
-    HAL_Delay(10);
-
-	HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_RESET);
-	ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 2, 5000); 
-
-    HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_SET);
-    
-	SPI_Rx_Buf[0] = aRxBuffer[0];
-    SPI_Rx_Buf[1] = aRxBuffer[1];
-	if(ret != HAL_OK)
+	for(i=0;i<ADC_AVARAGE_TIMES;i++)
 	{
-		App_Error_Check(HAL_ERROR);
+		HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_RESET);
+		ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 2, 5000); 
+
+		HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_SET);
+		
+		HAL_Delay(10);
+
+		HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_RESET);
+		ret = HAL_SPI_TransmitReceive(&ads1118SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, 2, 5000); 
+
+		HAL_GPIO_WritePin(GPIO_PORT_ADS1118_CS, GPIO_PIN_ADS1118_CS, GPIO_PIN_SET);
+		
+		SPI_Rx_Buf[0] = aRxBuffer[0];
+		SPI_Rx_Buf[1] = aRxBuffer[1];
+		if(ret != HAL_OK)
+		{
+			App_Error_Check(HAL_ERROR);
+		}
+		adc_sum = (adc_sum + ((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]));
 	}
-	
+		
 #if FULL_SCALE_02
-	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.0078125);//FS02= FS/32768
+	(*pVsens) = ((float)((adc_sum) * 0.0078125))/ADC_AVARAGE_TIMES;//FS02= FS/32768
 #elif FULL_SCALE_05
-	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.015625);//FS05 = FS/32768
+	(*pVsens) = ((float)((adc_sum) * 0.015625))/ADC_AVARAGE_TIMES;//FS05 = FS/32768
 #elif FULL_SCALE_1
-	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.03125);//FS1 = FS/32768
+	(*pVsens) = ((float)((adc_sum) * 0.03125))/ADC_AVARAGE_TIMES;//FS1 = FS/32768
 #elif FULL_SCALE_2
-	(*pVsens) = (float)(((SPI_Rx_Buf[0] << 8) | SPI_Rx_Buf[1]) * 0.0625);//FS2 = FS/32768
-#endif	
+	(*pVsens) = ((float)((adc_sum) * 0.0625))/ADC_AVARAGE_TIMES;//FS2 = FS/32768
+#endif		
     	
 	return(ret); 
 }

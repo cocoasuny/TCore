@@ -24,10 +24,8 @@ static float alg_coreTemperature_param3 = 0.0f;
 static float alg_coreTemperature_param4 = 0.0f;
 static float alg_coreTemperature_param5 = 0.0f;
 
-
-const float Rt_ref[NTC_LUT_LEN] = 
+const float Rt_ref_2K[NTC_LUT_LEN] = 
 {
-#if 0
 	2252,2243,2234,2225,2216,2206,2196,2186,2176,2166, //25.0~25.9
 	2156,2147,2138,2129,2120,2111,2102,2093,2084,2075, //26.0~26.9
 	2064,2055,2046,2037,2028,2019,2010,2001,1992,1983, //27.0~27.9
@@ -43,8 +41,12 @@ const float Rt_ref[NTC_LUT_LEN] =
 	1355,1350,1344,1339,1333,1328,1322,1317,1311,1306, //37.0~37.9
 	1301,1296,1290,1285,1280,1274,1269,1264,1258,1253, //38.0~38.9
 	1249,1244,1239,1234,1228,1223,1218,1213,1208,1203, //39.0~39.9
-	1200,1195,1190,1185,1180,1175,1170,1166,1161,1156, //40.0~40.9
-#else   //深圳栋邦阻温表A.10K3980B-161221（0.1分度）
+	1200,1195,1190,1185,1180,1175,1170,1166,1161,1156, //40.0~40.9 
+};
+
+const float Rt_ref_10K[NTC_LUT_LEN] = 
+{
+   //深圳栋邦阻温表A.10K3980B-161221（0.1分度）
     10000.0,9956.1,	9912.4,	9869.0,	9825.8,	9782.8,	9740.0,	9697.4,	9655.0,	9612.9, //25.0~25.9
     9570.9,	9529.2,	9487.6,	9446.3,	9405.2,	9364.3,	9323.6,	9283.1,	9242.8,	9202.7,	//26.0~26.9
     9162.8,	9123.0,	9083.5,	9044.2,	9005.1,	8966.2,	8927.4,	8888.9,	8850.5,	8812.4,	//27.0~27.9
@@ -60,8 +62,7 @@ const float Rt_ref[NTC_LUT_LEN] =
     6013.4,	5988.9,	5964.5,	5940.2,	5916.1,	5892.0,	5868.1,	5844.3,	5820.6,	5797.0,	//37.0~37.9
     5773.5,	5750.1,	5726.9,	5703.7,	5680.6,	5657.7,	5634.9,	5612.1,	5589.5,	5567.0,	//38.0~38.9
     5544.6,	5522.3,	5500.1,	5478.0,	5455.9,	5434.0,	5412.2,	5390.5,	5368.9,	5347.4,	//39.0~39.9
-    5326.0,	5304.7,	5283.5,	5262.4,	5241.4,	5220.5,	5199.7,	5179.0,	5158.3,	5137.8, //40.0~40.9
-#endif    
+    5326.0,	5304.7,	5283.5,	5262.4,	5241.4,	5220.5,	5199.7,	5179.0,	5158.3,	5137.8, //40.0~40.9   
 };
 
 const float Tempurature[NTC_LUT_LEN] =
@@ -91,9 +92,10 @@ const float Tempurature[NTC_LUT_LEN] =
   * @note   通过NTC电阻值计算对应温度值
   * @param[in]  Rt
   * @param[out] *tVal
+  * @param[in] 
   * @retval None    
   */
-void ntc_temperature_calculate(uint32_t Rt,float *tVal)
+void ntc_temperature_calculate(uint32_t Rt,float *tVal,NTC_TYPE_T ntctype)
 {
 	uint16_t 	num=0;
 	float 		Tamb=0;
@@ -101,9 +103,25 @@ void ntc_temperature_calculate(uint32_t Rt,float *tVal)
 	
 	for(num=0;num<NTC_LUT_LEN;num++)
 	{
-		if(Rt >= Rt_ref[num])
+		switch(ntctype)
 		{
+			case NTC_2K:
+			{
+				if(Rt >= Rt_ref_2K[num])
+				{
+					break;
+				}
+			}
 			break;
+			case NTC_10K:
+			{
+				if(Rt >= Rt_ref_10K[num])
+				{
+					break;
+				}
+			}
+			break;	
+			default:break;
 		}
 	}
 	
@@ -117,14 +135,35 @@ void ntc_temperature_calculate(uint32_t Rt,float *tVal)
 	}
 	else
 	{
-		Mid = (Rt_ref[num] - Rt_ref[num-1])/2;
-		if((Rt-Rt_ref[num]) <= Mid)
+		switch(ntctype)
 		{
-			Tamb = Tempurature[num-1];
-		}
-		else
-		{
-			Tamb = Tempurature[num];
+			case NTC_2K:
+			{
+				Mid = (Rt_ref_2K[num] - Rt_ref_2K[num-1])/2;
+				if((Rt-Rt_ref_2K[num]) <= Mid)
+				{
+					Tamb = Tempurature[num-1];
+				}
+				else
+				{
+					Tamb = Tempurature[num];
+				}
+			}
+			break;
+			case NTC_10K:
+			{
+				Mid = (Rt_ref_10K[num] - Rt_ref_10K[num-1])/2;
+				if((Rt-Rt_ref_10K[num]) <= Mid)
+				{
+					Tamb = Tempurature[num-1];
+				}
+				else
+				{
+					Tamb = Tempurature[num];
+				}
+			}
+			break;
+			default:break;
 		}
 	}
 	*tVal = Tamb;	
