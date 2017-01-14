@@ -100,30 +100,33 @@ void ntc_temperature_calculate(uint32_t Rt,float *tVal,NTC_TYPE_T ntctype)
 	uint16_t 	num=0;
 	float 		Tamb=0;
 	float 		Mid=0;
-	
-	for(num=0;num<NTC_LUT_LEN;num++)
-	{
-		switch(ntctype)
-		{
-			case NTC_2K:
-			{
-				if(Rt >= Rt_ref_2K[num])
+	   
+    switch(ntctype)
+    {
+        case NTC_2K:
+        {
+            for(num=0;num<NTC_LUT_LEN;num++)
+            {
+                if(Rt >= Rt_ref_2K[num])
 				{
 					break;
 				}
-			}
-			break;
-			case NTC_10K:
-			{
-				if(Rt >= Rt_ref_10K[num])
+            }
+        }
+        break;
+        case NTC_10K:
+        {
+            for(num=0;num<NTC_LUT_LEN;num++)
+            {
+                if(Rt >= Rt_ref_10K[num])
 				{
 					break;
 				}
-			}
-			break;	
-			default:break;
-		}
-	}
+            }        
+        }
+        break;
+        default:break;
+    }    
 	
 	if(num >= NTC_LUT_LEN - 1)
 	{
